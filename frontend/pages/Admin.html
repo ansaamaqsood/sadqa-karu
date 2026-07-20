@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Sadqa Karu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --green: #4E9D73;
+      --green-dark: #3a7a58;
+      --green-light: #e8f5ee;
+      --green-mid: #c2e8d3;
+      --text: #1a2e22;
+      --muted: #6b7c72;
+      --white: #ffffff;
+      --border: #d0e8da;
+      --sidebar: #1a2e22;
+      --sidebar-hover: #2a4a35;
+      --sidebar-active: #4E9D73;
+      --red: #e05555;
+      --red-light: #fdeaea;
+      --yellow: #f0a500;
+      --yellow-light: #fff8e1;
+      --blue: #3a82d4;
+      --blue-light: #e8f0fc;
+    }
+ 
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #f0f7f3;
+      display: flex;
+      min-height: 100vh;
+      color: var(--text);
+    }
+ 
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      background: var(--sidebar);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      transition: width 0.3s;
+    }
+ 
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+ 
+    .sidebar-logo .logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--white);
+    }
+ 
+    .sidebar-logo .logo span { color: var(--green); }
+    .sidebar-logo .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--green);
+      background: rgba(78,157,115,0.15);
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-top: 4px;
+      display: inline-block;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+ 
+    .sidebar-nav {
+      padding: 20px 12px;
+      flex: 1;
+    }
+ 
+    .nav-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0 12px;
+      margin: 16px 0 8px;
+    }
+ 
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+      color: rgba(255,255,255,0.6);
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+ 
+    .nav-item:hover { background: var(--sidebar-hover); color: var(--white); }
+    .nav-item.active { background: var(--green); color: var(--white); }
+    .nav-item .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+ 
+    .nav-item .badge-count {
+      margin-left: auto;
+      background: var(--red);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 20px;
+      min-width: 20px;
+      text-align: center;
+    }
+ 
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+ 
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.5);
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+ 
+    .logout-btn:hover { background: rgba(224,85,85,0.15); color: #ff8080; }
+ 
+    /* ── MAIN ── */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+ 
+    /* TOP BAR */
+    .topbar {
+      background: var(--white);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+ 
+    .topbar h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+ 
+    .topbar .sub { font-size: 0.82rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+ 
+    .admin-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+ 
+    .admin-avatar {
+      width: 38px; height: 38px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 800;
+      color: white;
+    }
+ 
+    .admin-name { font-weight: 700; font-size: 0.9rem; }
+    .admin-role { font-size: 0.75rem; color: var(--muted); }
+ 
+    /* CONTENT */
+    .content {
+      padding: 28px 32px;
+      flex: 1;
+    }
+ 
+    /* SECTION (tabs) */
+    .section { display: none; }
+    .section.active { display: block; animation: fadeUp 0.4s ease both; }
+ 
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+ 
+    /* KPI CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+ 
+    .kpi-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 22px 20px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+ 
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(78,157,115,0.12); }
+ 
+    .kpi-card .kpi-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+ 
+    .kpi-card .kpi-icon.green { background: var(--green-light); }
+    .kpi-card .kpi-icon.red { background: var(--red-light); }
+    .kpi-card .kpi-icon.yellow { background: var(--yellow-light); }
+    .kpi-card .kpi-icon.blue { background: var(--blue-light); }
+ 
+    .kpi-card .kpi-num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+ 
+    .kpi-card .kpi-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+ 
+    .kpi-card .kpi-trend {
+      position: absolute;
+      top: 18px; right: 18px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+ 
+    .kpi-trend.up { background: var(--green-light); color: var(--green-dark); }
+    .kpi-trend.pending { background: var(--yellow-light); color: #7a5f00; }
+ 
+    /* PANELS GRID */
+    .panels-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+ 
+    .panel {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+ 
+    .panel.full { grid-column: 1 / -1; }
+ 
+    .panel-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+ 
+    .panel-header h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+ 
+    .panel-header .count-badge {
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+ 
+    .panel-body { padding: 0; }
+ 
+    /* APPROVAL ITEMS */
+    .approval-item {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: background 0.15s;
+    }
+ 
+    .approval-item:last-child { border-bottom: none; }
+    .approval-item:hover { background: #fafcfb; }
+ 
+    .approval-avatar {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+ 
+    .approval-avatar.ngo { background: var(--blue-light); }
+    .approval-avatar.volunteer { background: var(--green-light); }
+ 
+    .approval-info { flex: 1; min-width: 0; }
+    .approval-info .name { font-weight: 800; font-size: 0.92rem; color: var(--text); }
+    .approval-info .meta { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+ 
+    .approval-actions { display: flex; gap: 8px; flex-shrink: 0; }
+ 
+    .btn-approve {
+      padding: 7px 14px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+ 
+    .btn-approve:hover { background: var(--green-dark); }
+ 
+    .btn-reject {
+      padding: 7px 14px;
+      background: var(--red-light);
+      color: var(--red);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+ 
+    .btn-reject:hover { background: #fbd5d5; }
+ 
+    .btn-view {
+      padding: 7px 14px;
+      background: var(--blue-light);
+      color: var(--blue);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+ 
+    .btn-view:hover { background: #d4e4f8; }
+ 
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      text-align: left;
+      padding: 12px 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      background: #fafcfb;
+      border-bottom: 1px solid var(--border);
+    }
+ 
+    .data-table td {
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+ 
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #fafcfb; }
+ 
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+ 
+    .status-badge.pending { background: var(--yellow-light); color: #7a5f00; }
+    .status-badge.accepted { background: var(--green-light); color: var(--green-dark); }
+    .status-badge.delivered { background: #e8f4ff; color: #1a56a0; }
+    .status-badge.rejected { background: var(--red-light); color: var(--red); }
+ 
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+ 
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+ 
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+ 
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: slideUp 0.3s ease;
+    }
+ 
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+ 
+    .modal-header {
+      padding: 22px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+ 
+    .modal-header h3 { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--muted); padding: 4px; }
+    .modal-close:hover { color: var(--text); }
+ 
+    .modal-body { padding: 22px 26px; }
+ 
+    .detail-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+ 
+    .detail-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      min-width: 110px;
+      padding-top: 2px;
+    }
+ 
+    .detail-value {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+ 
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      background: var(--blue-light);
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-top: 4px;
+    }
+ 
+    .modal-footer {
+      padding: 16px 26px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+ 
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+ 
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-state p { font-weight: 700; font-size: 0.9rem; }
+ 
+    /* LOADING */
+    .loading { text-align: center; padding: 30px; color: var(--muted); font-weight: 700; font-size: 0.9rem; }
+ 
+    @media (max-width: 1024px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .panels-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .sidebar { width: 60px; } .sidebar-logo .logo span, .sidebar-logo .badge, .nav-item span:not(.icon), .nav-label, .logout-btn span { display: none; } .main { margin-left: 60px; } .kpi-grid { grid-template-columns: repeat(2,1fr); } .content { padding: 16px; } }
+  </style>
+</head>
+<body>
+ 
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo">Sadqa <span>Karu</span></div>
+    <span class="badge">Admin Panel</span>
+  </div>
+ 
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+    <a class="nav-item active" onclick="showSection('dashboard')">
+      <span class="icon"></span><span>Dashboard</span>
+    </a>
+ 
+    <div class="nav-label">Approvals</div>
+    <a class="nav-item" onclick="showSection('ngo-approvals')">
+      <span class="icon"></span><span>NGO Requests</span>
+      <span class="badge-count" id="ngo-count">0</span>
+    </a>
+    <a class="nav-item" onclick="showSection('volunteer-approvals')">
+      <span class="icon"></span><span>Volunteer Requests</span>
+      <span class="badge-count" id="vol-count">0</span>
+    </a>
+ 
+    <div class="nav-label">Management</div>
+    <a class="nav-item" onclick="showSection('donations')">
+      <span class="icon"></span><span>Donations</span>
+    </a>
+    <a class="nav-item" onclick="showSection('users')">
+      <span class="icon"></span><span>Users</span>
+    </a>
+    <a class="nav-item" onclick="showSection('ngos')">
+      <span class="icon"></span><span>NGOs</span>
+    </a>
+  </nav>
+ 
+  <div class="sidebar-footer">
+    <a class="logout-btn" href="login.html">
+      <span class="icon"></span><span>Logout</span>
+    </a>
+  </div>
+</aside>
+ 
+<!-- MAIN -->
+<div class="main">
+ 
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <h1 id="page-title">Dashboard Overview</h1>
+      <div class="sub" id="page-sub">Welcome back, Admin</div>
+    </div>
+    <div class="admin-info">
+      <div>
+        <div class="admin-name">Admin</div>
+        <div class="admin-role">Super Admin</div>
+      </div>
+      <div class="admin-avatar">A</div>
+    </div>
+  </div>
+ 
+  <!-- CONTENT -->
+  <div class="content">
+ 
+    <!-- ══ DASHBOARD SECTION ══ -->
+    <div class="section active" id="section-dashboard">
+ 
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon green">📦</div>
+          <div class="kpi-num" id="kpi-donations">—</div>
+          <div class="kpi-label">Total Donations</div>
+          <span class="kpi-trend up">Active</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon blue">👥</div>
+          <div class="kpi-num" id="kpi-users">—</div>
+          <div class="kpi-label">Total Users</div>
+          <span class="kpi-trend up">Donors</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon yellow">🏢</div>
+          <div class="kpi-num" id="kpi-ngos">—</div>
+          <div class="kpi-label">Total NGOs</div>
+          <span class="kpi-trend up">Listed</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon red">🩺</div>
+          <div class="kpi-num" id="kpi-volunteers">—</div>
+          <div class="kpi-label">Volunteers</div>
+          <span class="kpi-trend pending">Pending</span>
+        </div>
+      </div>
+ 
+      <!-- BOTTOM PANELS -->
+      <div class="panels-grid">
+ 
+        <!-- Pending NGO Approvals -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>🏢 Pending NGO Approvals</h3>
+            <span class="count-badge" id="dash-ngo-count">0 pending</span>
+          </div>
+          <div class="panel-body" id="dash-ngo-list">
+            <div class="loading">Loading...</div>
+          </div>
+        </div>
+ 
+        <!-- Pending Volunteer Approvals -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>🩺 Pending Volunteer Approvals</h3>
+            <span class="count-badge" id="dash-vol-count">0 pending</span>
+          </div>
+          <div class="panel-body" id="dash-vol-list">
+            <div class="loading">Loading...</div>
+          </div>
+        </div>
+ 
+        <!-- Recent Donations -->
+        <div class="panel full">
+          <div class="panel-header">
+            <h3>📦 Recent Donations</h3>
+            <span class="count-badge" id="dash-don-count">0 total</span>
+          </div>
+          <div class="panel-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Donor</th>
+                  <th>NGO</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="dash-donations-table">
+                <tr><td colspan="6" class="loading">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+ 
+    <!-- ══ NGO APPROVALS SECTION ══ -->
+    <div class="section" id="section-ngo-approvals">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>🏢 NGO Registration Requests</h3>
+          <span class="count-badge" id="ngo-panel-count">Loading...</span>
+        </div>
+        <div class="panel-body" id="ngo-approvals-list">
+          <div class="loading">Loading...</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ══ VOLUNTEER APPROVALS SECTION ══ -->
+    <div class="section" id="section-volunteer-approvals">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>🩺 Volunteer / Doctor Registration Requests</h3>
+          <span class="count-badge" id="vol-panel-count">Loading...</span>
+        </div>
+        <div class="panel-body" id="vol-approvals-list">
+          <div class="loading">Loading...</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ══ DONATIONS SECTION ══ -->
+    <div class="section" id="section-donations">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>📦 All Donations</h3>
+          <span class="count-badge" id="don-panel-count">Loading...</span>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Description</th><th>NGO</th><th>Status</th><th>Date</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="all-donations-table">
+              <tr><td colspan="7" class="loading">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ══ USERS SECTION ══ -->
+    <div class="section" id="section-users">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>👥 All Users</h3>
+          <span class="count-badge" id="users-panel-count">Loading...</span>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr>
+            </thead>
+            <tbody id="all-users-table">
+              <tr><td colspan="5" class="loading">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ══ NGOs SECTION ══ -->
+    <div class="section" id="section-ngos">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>🌿 Registered NGOs</h3>
+          <span class="count-badge" id="ngos-panel-count">Loading...</span>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Location</th><th>Description</th></tr>
+            </thead>
+            <tbody id="all-ngos-table">
+              <tr><td colspan="4" class="loading">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+</div>
+ 
+<!-- MODAL: Detail View -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Details</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+ 
+<script>
+const token = localStorage.getItem("token");
+const API = "http://localhost:3000";
+ 
+// ── NAVIGATION ──
+function showSection(name) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("section-" + name).classList.add("active");
+  event.currentTarget.classList.add("active");
+ 
+  const titles = {
+    dashboard: ["Dashboard Overview", "Welcome back, Admin"],
+    "ngo-approvals": ["NGO Approval Requests", "Review and approve NGO registrations"],
+    "volunteer-approvals": ["Volunteer Approval Requests", "Review and approve volunteer registrations"],
+    donations: ["All Donations", "Monitor all donation activity"],
+    users: ["All Users", "Manage registered users"],
+    ngos: ["Registered NGOs", "View all NGOs on platform"]
+  };
+ 
+  if (titles[name]) {
+    document.getElementById("page-title").textContent = titles[name][0];
+    document.getElementById("page-sub").textContent = titles[name][1];
+  }
+ 
+  // Load section data
+  if (name === "ngo-approvals") loadNGOApprovals();
+  if (name === "volunteer-approvals") loadVolunteerApprovals();
+  if (name === "donations") loadAllDonations();
+  if (name === "users") loadAllUsers();
+  if (name === "ngos") loadAllNGOs();
+}
+ 
+// ── LOAD DASHBOARD ──
+async function loadDashboard() {
+  try {
+    /* Donations — public route, no token needed */
+    const donRes    = await fetch(`${API}/donations`);
+    const donations = await donRes.json();
+    document.getElementById("kpi-donations").textContent  = Array.isArray(donations) ? donations.length : "0";
+    document.getElementById("dash-don-count").textContent = (Array.isArray(donations) ? donations.length : 0) + " total";
+    if (Array.isArray(donations)) renderDonationsTable(donations.slice(0, 5), "dash-donations-table");
+
+    /* Users — admin route */
+    const userRes = await fetch(`${API}/admin/users`, { headers: { authorization: token } });
+    const users   = await userRes.json();
+    document.getElementById("kpi-users").textContent = Array.isArray(users) ? users.length : "0";
+
+    /* NGOs — public route */
+    const ngoRes = await fetch(`${API}/ngos`);
+    const ngos   = await ngoRes.json();
+    document.getElementById("kpi-ngos").textContent = Array.isArray(ngos) ? ngos.length : "0";
+
+    /* Pending NGOs */
+    const pendNGORes  = await fetch(`${API}/admin/pending-ngos`, { headers: { authorization: token } });
+    const pendingNGOs = await pendNGORes.json();
+    document.getElementById("dash-ngo-count").textContent = (Array.isArray(pendingNGOs) ? pendingNGOs.length : 0) + " pending";
+    document.getElementById("ngo-count").textContent      = Array.isArray(pendingNGOs) ? pendingNGOs.length : 0;
+    if (Array.isArray(pendingNGOs)) renderApprovalList(pendingNGOs.slice(0, 3), "dash-ngo-list", "ngo");
+    else document.getElementById("dash-ngo-list").innerHTML = '<div class="empty-state"><div class="icon">✅</div><p>No pending NGOs</p></div>';
+
+    /* Pending Volunteers */
+    const pendVolRes  = await fetch(`${API}/admin/pending-volunteers`, { headers: { authorization: token } });
+    const pendingVols = await pendVolRes.json();
+    document.getElementById("kpi-volunteers").textContent  = Array.isArray(pendingVols) ? pendingVols.length : "0";
+    document.getElementById("dash-vol-count").textContent  = (Array.isArray(pendingVols) ? pendingVols.length : 0) + " pending";
+    document.getElementById("vol-count").textContent       = Array.isArray(pendingVols) ? pendingVols.length : 0;
+    if (Array.isArray(pendingVols)) renderApprovalList(pendingVols.slice(0, 3), "dash-vol-list", "volunteer");
+    else document.getElementById("dash-vol-list").innerHTML = '<div class="empty-state"><div class="icon">✅</div><p>No pending volunteers</p></div>';
+
+  } catch (err) {
+    console.log("Dashboard error:", err);
+    document.getElementById("kpi-donations").textContent  = "—";
+    document.getElementById("kpi-users").textContent      = "—";
+    document.getElementById("kpi-ngos").textContent       = "—";
+    document.getElementById("kpi-volunteers").textContent = "—";
+    document.getElementById("dash-ngo-list").innerHTML    = '<div class="empty-state"><div class="icon">🔌</div><p>Backend not connected</p></div>';
+    document.getElementById("dash-vol-list").innerHTML    = '<div class="empty-state"><div class="icon">🔌</div><p>Backend not connected</p></div>';
+    document.getElementById("dash-donations-table").innerHTML = '<tr><td colspan="6" class="loading">Backend not connected</td></tr>';
+  }
+}
+ 
+// ── RENDER APPROVAL LIST ──
+function renderApprovalList(items, containerId, type) {
+  const container = document.getElementById(containerId);
+  if (!items || items.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">✅</div><p>No pending requests</p></div>';
+    return;
+  }
+ 
+  container.innerHTML = items.map(item => `
+    <div class="approval-item">
+      <div class="approval-avatar ${type}">
+        ${type === "ngo" ? "🏢" : "🩺"}
+      </div>
+      <div class="approval-info">
+        <div class="name">${item.name}</div>
+        <div class="meta">${item.email} · ${item.location || item.phone || ""}</div>
+      </div>
+      <div class="approval-actions">
+        <button class="btn-view" onclick="openDetailModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${type}')">View</button>
+        <button class="btn-approve" onclick="approveItem(${item.id}, '${type}', this)">✓ Approve</button>
+        <button class="btn-reject" onclick="rejectItem(${item.id}, '${type}', this)">✕</button>
+      </div>
+    </div>
+  `).join("");
+}
+ 
+// ── RENDER DONATIONS TABLE ──
+function renderDonationsTable(donations, tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  if (!donations || donations.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">No donations found</td></tr>';
+    return;
+  }
+ 
+  tbody.innerHTML = donations.map(d => `
+    <tr>
+      <td><strong>${d.title}</strong></td>
+      <td>${d.user_id}</td>
+      <td>${d.ngo_name || d.ngo_id || "—"}</td>
+      <td><span class="status-badge ${d.status || 'pending'}">${d.status || "Pending"}</span></td>
+      <td>${new Date(d.created_at).toLocaleDateString()}</td>
+      <td><button class="btn-view" onclick="openDonationModal(${JSON.stringify(d).replace(/"/g, '&quot;')})">Details</button></td>
+    </tr>
+  `).join("");
+}
+ 
+// ── LOAD ALL DONATIONS ──
+async function loadAllDonations() {
+  try {
+    const res = await fetch(`${API}/donations`, { headers: { authorization: token } });
+    const data = await res.json();
+    document.getElementById("don-panel-count").textContent = data.length + " total";
+    const tbody = document.getElementById("all-donations-table");
+    tbody.innerHTML = data.map(d => `
+      <tr>
+        <td>${d.id}</td>
+        <td><strong>${d.title}</strong></td>
+        <td>${d.description ? d.description.substring(0, 40) + "..." : "—"}</td>
+        <td>${d.ngo_name || d.ngo_id || "—"}</td>
+        <td><span class="status-badge ${d.status || 'pending'}">${d.status || "Pending"}</span></td>
+        <td>${new Date(d.created_at).toLocaleDateString()}</td>
+        <td><button class="btn-view" onclick="openDonationModal(${JSON.stringify(d).replace(/"/g, '&quot;')})">Details</button></td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    document.getElementById("all-donations-table").innerHTML = '<tr><td colspan="7" class="loading">Error loading data</td></tr>';
+  }
+}
+ 
+// ── LOAD ALL USERS ──
+async function loadAllUsers() {
+  try {
+    const res = await fetch(`${API}/admin/users`, { headers: { authorization: token } });
+    const data = await res.json();
+    document.getElementById("users-panel-count").textContent = data.length + " users";
+    document.getElementById("all-users-table").innerHTML = data.map(u => `
+      <tr>
+        <td>${u.id}</td>
+        <td><strong>${u.name}</strong></td>
+        <td>${u.email}</td>
+        <td><span class="status-badge ${u.role === 'donor' ? 'accepted' : u.role === 'admin' ? 'delivered' : 'pending'}">${u.role || "—"}</span></td>
+        <td>${new Date(u.created_at).toLocaleDateString()}</td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    document.getElementById("all-users-table").innerHTML = '<tr><td colspan="5" class="loading">Error loading data</td></tr>';
+  }
+}
+ 
+// ── LOAD ALL NGOs ──
+async function loadAllNGOs() {
+  try {
+    const res = await fetch(`${API}/ngos`);
+    const data = await res.json();
+    document.getElementById("ngos-panel-count").textContent = data.length + " NGOs";
+    document.getElementById("all-ngos-table").innerHTML = data.map(n => `
+      <tr>
+        <td>${n.id}</td>
+        <td><strong>${n.name}</strong></td>
+        <td>${n.location || "—"}</td>
+        <td>${n.description ? n.description.substring(0, 60) + "..." : "—"}</td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    document.getElementById("all-ngos-table").innerHTML = '<tr><td colspan="4" class="loading">Error loading data</td></tr>';
+  }
+}
+ 
+// ── LOAD NGO APPROVALS ──
+async function loadNGOApprovals() {
+  try {
+    const res = await fetch(`${API}/admin/pending-ngos`, { headers: { authorization: token } });
+    const data = await res.json();
+    document.getElementById("ngo-panel-count").textContent = data.length + " pending";
+    renderApprovalList(data, "ngo-approvals-list", "ngo");
+  } catch (err) {
+    document.getElementById("ngo-approvals-list").innerHTML = '<div class="empty-state"><div class="icon">🔌</div><p>Error loading data</p></div>';
+  }
+}
+ 
+// ── LOAD VOLUNTEER APPROVALS ──
+async function loadVolunteerApprovals() {
+  try {
+    const res = await fetch(`${API}/admin/pending-volunteers`, { headers: { authorization: token } });
+    const data = await res.json();
+    document.getElementById("vol-panel-count").textContent = data.length + " pending";
+    renderApprovalList(data, "vol-approvals-list", "volunteer");
+  } catch (err) {
+    document.getElementById("vol-approvals-list").innerHTML = '<div class="empty-state"><div class="icon">🔌</div><p>Error loading data</p></div>';
+  }
+}
+ 
+// ── APPROVE ──
+async function approveItem(id, type, btn) {
+  btn.disabled = true;
+  btn.textContent = "...";
+  try {
+    const endpoint = type === "ngo" ? `/admin/approve-ngo/${id}` : `/admin/approve-volunteer/${id}`;
+    const res = await fetch(API + endpoint, {
+      method: "POST",
+      headers: { authorization: token }
+    });
+    if (res.ok) {
+      btn.closest(".approval-item").style.opacity = "0.4";
+      btn.textContent = "✓ Approved";
+      loadDashboard();
+    }
+  } catch (err) {
+    btn.textContent = "Error";
+  }
+}
+ 
+// ── REJECT ──
+async function rejectItem(id, type, btn) {
+  if (!confirm("Are you sure you want to reject this request?")) return;
+  btn.disabled = true;
+  try {
+    const endpoint = type === "ngo" ? `/admin/reject-ngo/${id}` : `/admin/reject-volunteer/${id}`;
+    const res = await fetch(API + endpoint, {
+      method: "POST",
+      headers: { authorization: token }
+    });
+    if (res.ok) {
+      btn.closest(".approval-item").style.opacity = "0.4";
+    }
+  } catch (err) {
+    btn.disabled = false;
+  }
+}
+ 
+// ── MODAL: NGO/Volunteer Details ──
+function openDetailModal(item, type) {
+  document.getElementById("modal-title").textContent = type === "ngo" ? "🏢 NGO Details" : "🩺 Volunteer Details";
+ 
+  let bodyHTML = `
+    <div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">${item.name}</span></div>
+    <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${item.email}</span></div>
+    <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">${item.phone || "—"}</span></div>
+    <div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">${item.location || "—"}</span></div>
+  `;
+ 
+  if (type === "ngo") {
+    bodyHTML += `
+      <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">${item.description || "—"}</span></div>
+      ${item.ngo_certificate ? `<div class="detail-row"><span class="detail-label">Certificate</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.ngo_certificate}" target="_blank">📋 View Certificate</a></span></div>` : ""}
+    `;
+  } else {
+    bodyHTML += `
+      <div class="detail-row"><span class="detail-label">CNIC</span><span class="detail-value">${item.cnic || "—"}</span></div>
+      <div class="detail-row"><span class="detail-label">Service Type</span><span class="detail-value">${item.service_type || "Doctor"}</span></div>
+      ${item.cnic_front ? `<div class="detail-row"><span class="detail-label">CNIC Front</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.cnic_front}" target="_blank">📄 View</a></span></div>` : ""}
+      ${item.cnic_back ? `<div class="detail-row"><span class="detail-label">CNIC Back</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.cnic_back}" target="_blank">📄 View</a></span></div>` : ""}
+      ${item.verification_doc ? `<div class="detail-row"><span class="detail-label">Verification</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.verification_doc}" target="_blank">🏥 View Doc</a></span></div>` : ""}
+    `;
+  }
+ 
+  document.getElementById("modal-body").innerHTML = bodyHTML;
+  document.getElementById("modal-footer").innerHTML = `
+    <button class="btn-reject" onclick="rejectItem(${item.id}, '${type}', this); closeModal()">✕ Reject</button>
+    <button class="btn-approve" onclick="approveItem(${item.id}, '${type}', this); closeModal()">✓ Approve</button>
+  `;
+ 
+  document.getElementById("modal-overlay").classList.add("open");
+}
+ 
+// ── MODAL: Donation Details ──
+function openDonationModal(d) {
+  document.getElementById("modal-title").textContent = "📦 Donation Details";
+  document.getElementById("modal-body").innerHTML = `
+    <div class="detail-row"><span class="detail-label">Title</span><span class="detail-value">${d.title}</span></div>
+    <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">${d.description || "—"}</span></div>
+    <div class="detail-row"><span class="detail-label">NGO</span><span class="detail-value">${d.ngo_name || d.ngo_id || "—"}</span></div>
+    <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-badge ${d.status || 'pending'}">${d.status || "Pending"}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value">${new Date(d.created_at).toLocaleString()}</span></div>
+    ${d.image_url ? `<div class="detail-row"><span class="detail-label">Image</span><span class="detail-value"><img src="http://localhost:3000/uploads/${d.image_url}" style="max-width:100%;border-radius:10px;margin-top:6px;"></span></div>` : ""}
+    ${d.condition ? `<div class="detail-row"><span class="detail-label">AI Condition</span><span class="detail-value"><span class="status-badge accepted">${d.condition}</span></span></div>` : ""}
+  `;
+  document.getElementById("modal-footer").innerHTML = `
+    <button class="btn-reject" onclick="closeModal()">Close</button>
+  `;
+  document.getElementById("modal-overlay").classList.add("open");
+}
+ 
+function closeModal(e) {
+  if (!e || e.target === document.getElementById("modal-overlay")) {
+    document.getElementById("modal-overlay").classList.remove("open");
+  }
+}
+ 
+// ── INIT ──
+loadDashboard();
+</script>
+ 
+</body>
+</html>

@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signup</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+<header class="navbar">
+  <div class="logo">Sadqa <span>Karu</span></div>
+
+ <div class="navbar">
+   <!-- <h2>Sadqa <span style="color:green;">Karu</span></h2> -->
+  <div class="nav-links">
+    <a href="home.html" style="font-weight: bold; color: #4E9D73;">Home</a>
+    <a href="Ngo-list.html" style="font-weight: bold;">NGOs</a>
+    <a href="donation-list.html" style="font-weight: bold;">Donations</a>
+    <a href="volunteer.html" style="font-weight: bold;">Volunteer</a>
+    <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+
+  </div>
+</div>
+  
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>Find NGOs Making a Difference</h1>
+    <p>Connect with trusted organizations and help those in need.</p>
+
+    <div class="search-box">
+      <input type="text" placeholder="Search NGO by name...">
+    </div>
+  </div>
+
+  <div class="hero-img">
+    <img src="https://cdn-icons-png.flaticon.com/512/921/921347.png">
+  </div>
+</div>
+
+
+<!-- <div class="ngo-grid">
+  <div id="ngo-list"></div>
+</div> -->
+<div class="ngo-grid" id="ngo-list"></div>
+
+
+<div class="footer">
+
+  <div class="footer-container">
+
+   
+    <div class="footer-section">
+    
+      <div class="logo">Sadqa <span>Karu</span></div>
+
+      <p>Helping communities through donations and sharing.</p>
+    </div>
+
+    <!-- LINKS -->
+    <div class="footer-section">
+      <h4>Quick Links</h4>
+      <a href="dashboard.html" >Home</a>
+      <a href="ngos.html">NGOs</a>
+      <a href="#">Community</a>
+      <a href="#">Contact</a>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-section">
+      <h4>Contact</h4>
+      <p>Email: info@sadqa.com</p>
+      <p>Phone: +92 300 1234567</p>
+    </div>
+
+    <!-- MAP -->
+    <div class="footer-section">
+      <h4>Our Location</h4>
+      <iframe 
+        src="https://maps.google.com/maps?q=karachi&t=&z=13&ie=UTF8&iwloc=&output=embed"
+        width="100%" height="150">
+      </iframe>
+    </div>
+    </div>
+<!-- BOTTOM -->
+  <div class="footer-bottom">
+    © 2026 Sadqa Karu. All rights reserved.
+  </div>
+
+  </div>
+
+  <script>
+
+    /* NAVBAR — show name or Login */
+const userName = localStorage.getItem("name");
+const navDisplay  = document.getElementById("navDisplay");
+const navDropdown = document.getElementById("navDropdown");
+
+if (userName) {
+  /* Logged in — show name, hover shows logout */
+  navDisplay.textContent = "Hi, " + userName;
+  navDisplay.style.color = "#4E9D73";
+
+  /* Show dropdown on hover */
+  document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+  document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+
+} else {
+  /* Not logged in — show Login link */
+  navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+const container = document.getElementById("ngo-list");
+
+fetch("http://localhost:3000/ngos")
+  .then(res => res.json())
+  .then(data => {
+    container.innerHTML = "";
+
+    if (data.length === 0) {
+      container.innerHTML = "<p style='text-align:center; padding:40px;'>No NGOs available.</p>";
+      return;
+    }
+
+    /* Show ALL approved NGOs — no slice */
+    data.forEach(ngo => {
+      const fallback = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+      container.innerHTML += `
+        <div class="ngo-card">
+          <div class="ngo-left">
+            <img src="${ngo.image || fallback}" class="ngo-img" onerror="this.src='${fallback}'">
+            <div class="ngo-text">
+              <h3>${ngo.name}</h3>
+              <p>${ngo.description}</p>
+              <p><b>Location:</b> ${ngo.location}</p>
+            </div>
+          </div>
+          <div class="ngo-action">
+            <button onclick="viewDetails(${ngo.id})">View Details</button>
+          </div>
+        </div>
+      `;
+    });
+  })
+  .catch(err => console.log("Error fetching NGOs:", err));
+
+function viewDetails(id) {
+  window.location.href = "ngo-details.html?id=" + id;
+}
+</script>
+</body>
+</html>
+

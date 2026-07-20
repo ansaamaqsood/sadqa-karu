@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Volunteers - Sadqa Karu</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ============================================
+       VOLUNTEER LIST PAGE - OWN CSS
+       ============================================ */
+
+    /* PAGE TITLE */
+    .page-title { text-align: center; padding: 40px 20px 10px; }
+    .page-title h1 { font-size: 32px; margin: 0 0 8px; }
+    .page-title p  { color: #666; font-size: 15px; margin: 0; }
+
+    /* OFFER BUTTON — right side under title */
+    .offer-wrap {
+      text-align: right;
+      max-width: 1100px;
+      margin: 10px auto 0;
+      padding: 0 40px;
+    }
+
+    .offer-btn {
+      background: #4E9D73;
+      color: white;
+      padding: 11px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .offer-btn:hover { background: #3a7c5c; }
+
+    /* VOLUNTEER GRID — 3 columns same as donations */
+    .volunteer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 20px auto 60px;
+      padding: 0 40px;
+    }
+
+    /* VOLUNTEER CARD — same style as donation card */
+    .vol-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .vol-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+    }
+
+    /* Volunteer photo — same size as donation item image */
+    .vol-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    /* Card body */
+    .vol-card-body { padding: 16px; }
+
+    /* Volunteer name */
+    .vol-card-body h3 { margin: 0 0 6px; font-size: 16px; color: #111; }
+
+    /* Profession text */
+    .vol-card-body .vol-role { font-size: 13px; color: #777; margin: 0 0 10px; }
+
+    /* Service badge — same style as condition badge */
+    .vol-badge {
+      display: inline-block;
+      background: #eaf5ee;
+      color: #4E9D73;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+
+    /* View Details button — same as donations page */
+    .view-btn {
+      display: block;
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+      box-sizing: border-box;
+    }
+
+    .view-btn:hover { background: #3a7c5c; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state span { font-size: 48px; display: block; margin-bottom: 12px; }
+
+    /* SKELETON LOADING — same as donations */
+    .skeleton-vol {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .skel {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+    }
+
+    .skel-img  { height: 180px; width: 100%; }
+    .skel-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .skel-line { height: 12px; border-radius: 6px; }
+    .skel-line.short { width: 50%; }
+    .skel-line.long  { width: 80%; }
+    .skel-line.btn   { width: 100%; height: 36px; border-radius: 8px; margin-top: 4px; }
+
+    @keyframes shimmer {
+      0%   { background-position:  200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ============================================
+       POPUP MODAL — same structure as donations
+       ============================================ */
+
+    /* Dark overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    /* Popup box */
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: popIn 0.25s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* Close button */
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #888;
+      background: none;
+      border: none;
+    }
+
+    .modal-close:hover { color: #333; }
+
+    /* Volunteer photo in popup */
+    .modal-vol-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    /* Name in popup */
+    .modal-box h2 { margin: 0 0 4px; font-size: 20px; }
+
+    /* Info rows */
+    .modal-info { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+
+    .modal-info-row { display: flex; gap: 10px; font-size: 14px; color: #444; }
+
+    .modal-info-row .label { font-weight: 700; color: #222; min-width: 110px; flex-shrink: 0; }
+
+    .modal-divider { border: none; border-top: 1px solid #eee; margin: 14px 0; }
+
+    /* Avail Work button in popup */
+    .avail-btn {
+      display: block; width: 100%;
+      background: #4E9D73; color: white;
+      padding: 13px; border-radius: 10px;
+      border: none; font-size: 15px;
+      font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .avail-btn:hover { background: #3a7c5c; }
+
+    /* ACCESS DENIED POPUP — same as donations */
+    .access-denied {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .access-denied.active { display: flex; }
+
+    .access-denied-box {
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: popIn 0.25s ease;
+    }
+
+    .access-denied-box span { font-size: 48px; display: block; margin-bottom: 12px; }
+    .access-denied-box h3  { margin: 0 0 8px; font-size: 18px; }
+    .access-denied-box p   { color: #666; font-size: 14px; margin: 0 0 20px; }
+
+    .login-btn {
+      background: #4E9D73; color: white;
+      padding: 10px 20px; border-radius: 8px;
+      border: none; cursor: pointer;
+      font-weight: 600; margin-right: 8px;
+      transition: background 0.2s;
+    }
+
+    .login-btn:hover { background: #3a7c5c; }
+
+    .cancel-btn {
+      background: #eee; color: #444;
+      padding: 10px 20px; border-radius: 8px;
+      border: none; cursor: pointer; font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) { .volunteer-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .volunteer-grid { grid-template-columns: 1fr; padding: 0 20px; } }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR — same on all pages -->
+  <header class="navbar">
+    <div class="logo">Sadqa <span>Karu</span></div>
+    <div class="nav-links">
+      <a href="home.html"           style="font-weight:bold;">Home</a>
+      <a href="ngos.html"           style="font-weight:bold;">NGOs</a>
+      <a href="donation-list.html"      style="font-weight:bold;">Donations</a>
+      <a href="Volunteer.html" style="font-weight:bold; color:#4E9D73;">Volunteer</a>
+      <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+    </div>
+  </header>
+
+  <!-- PAGE TITLE -->
+  <div class="page-title">
+    <h1>Available Volunteers</h1>
+    <p>Community members offering their skills and services</p>
+  </div>
+
+  <!-- OFFER VOLUNTEER WORK BUTTON — right aligned -->
+  <div class="offer-wrap">
+    <a href="volunteer-form.html" class="offer-btn"> Offer Volunteer Work</a>
+  </div>
+
+  <!-- VOLUNTEER GRID — filled by JavaScript -->
+  <div class="volunteer-grid" id="volunteer-list">
+
+    <!-- Skeleton loading placeholders -->
+    <div class="skeleton-vol">
+      <div class="skel skel-img"></div>
+      <div class="skel-body">
+        <div class="skel skel-line long"></div>
+        <div class="skel skel-line short"></div>
+        <div class="skel skel-line btn"></div>
+      </div>
+    </div>
+    <div class="skeleton-vol">
+      <div class="skel skel-img"></div>
+      <div class="skel-body">
+        <div class="skel skel-line long"></div>
+        <div class="skel skel-line short"></div>
+        <div class="skel skel-line btn"></div>
+      </div>
+    </div>
+    <div class="skeleton-vol">
+      <div class="skel skel-img"></div>
+      <div class="skel-body">
+        <div class="skel skel-line long"></div>
+        <div class="skel skel-line short"></div>
+        <div class="skel skel-line btn"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DETAIL POPUP — NGO only -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box">
+
+      <button class="modal-close" onclick="closeModal()">✕</button>
+
+      <!-- Volunteer photo -->
+      <img id="modalImg" src="" alt="Volunteer" class="modal-vol-img">
+
+      <!-- Name and service -->
+      <h2 id="modalName"></h2>
+      <span class="vol-badge" id="modalService"></span>
+
+      <hr class="modal-divider">
+
+      <!-- Detail rows -->
+      <div class="modal-info">
+        <div class="modal-info-row">
+          <span class="label">💼 Profession</span>
+          <span id="modalProfession"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">📝 About</span>
+          <span id="modalAbout"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">👥 Can Help</span>
+          <span id="modalCapacity"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">📍 Location</span>
+          <span id="modalLocation"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">📞 Phone</span>
+          <span id="modalPhone"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">🕐 Available</span>
+          <span id="modalAvailability"></span>
+        </div>
+      </div>
+
+      <hr class="modal-divider">
+
+      <!-- NGO clicks this to avail volunteer -->
+      <button class="avail-btn" id="availBtn">Avail Volunteer Work</button>
+
+    </div>
+  </div>
+
+  <!-- ACCESS DENIED — not NGO -->
+  <div class="access-denied" id="accessDenied" onclick="closeAccessDeniedOnOverlay(event)">
+    <div class="access-denied-box">
+      <span>🔒</span>
+      <h3>NGO Login Required</h3>
+      <p>Only NGO accounts can view volunteer details.</p>
+      <button class="login-btn" onclick="window.location.href='login.html'">Login as NGO</button>
+      <button class="cancel-btn" onclick="closeAccessDenied()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- FOOTER — same on all pages -->
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="logo">Sadqa <span>Karu</span></div>
+        <p>Helping communities through donations and sharing.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="ngos.html">NGOs</a>
+        <a href="donations.html">Donations</a>
+        <a href="volunteer-list.html">Volunteer</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@sadqa.com</p>
+        <p>Phone: +92 300 1234567</p>
+      </div>
+      
+    </div>
+    <div class="footer-bottom">© 2026 Sadqa Karu. All rights reserved.</div>
+  </div>
+
+  <script>
+    /* NAVBAR — show name or Login */
+const userName = localStorage.getItem("name");
+const navDisplay  = document.getElementById("navDisplay");
+const navDropdown = document.getElementById("navDropdown");
+
+if (userName) {
+  /* Logged in — show name, hover shows logout */
+  navDisplay.textContent = "Hi, " + userName;
+  navDisplay.style.color = "#4E9D73";
+
+  /* Show dropdown on hover */
+  document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+  document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+
+} else {
+  /* Not logged in — show Login link */
+  navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+    const container = document.getElementById("volunteer-list");
+    let allVolunteers = [];
+
+    /* Default fallback image if volunteer has no photo */
+    const fallbackImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+    /* ----------------------------------------------------------
+       1. LOAD VOLUNTEERS
+          Tries backend first
+    ---------------------------------------------------------- */
+   fetch("http://localhost:3000/volunteers")
+  .then(res => res.json())
+  .then(data => { allVolunteers = data; renderVolunteers(allVolunteers); })
+  .catch(err => {
+    console.log("Error fetching volunteers:", err);
+    container.innerHTML = `
+      <div class="empty-state">
+        <span>⚠️</span>
+        <p>Could not load volunteers. Make sure backend is running.</p>
+      </div>
+    `;
+  });
+
+
+    /* ----------------------------------------------------------
+       2. RENDER VOLUNTEER CARDS
+          Shows: photo, name, profession, service badge, button
+          Same card structure as donations page
+    ---------------------------------------------------------- */
+    function renderVolunteers(list) {
+      container.innerHTML = "";
+
+      /* Empty state */
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <span>🙋</span>
+            <p>No volunteers yet.<br>
+               <a href="volunteer-form.html" style="color:#4E9D73; font-weight:600;">Be the first →</a>
+            </p>
+          </div>`;
+        return;
+      }
+
+      /* Build each card */
+      list.forEach(vol => {
+        container.innerHTML += `
+          <div class="vol-card">
+
+            <!-- Volunteer photo — uploaded by volunteer in the form -->
+            <img
+              src="${vol.image || fallbackImg}"
+              alt="${vol.name}"
+              onerror="this.src='${fallbackImg}'"
+            >
+
+            <div class="vol-card-body">
+
+              <!-- Name -->
+              <h3>${vol.name}</h3>
+
+              <!-- Profession -->
+              <p class="vol-role">${vol.profession}</p>
+
+              <!-- Service type badge -->
+              <span class="vol-badge">${vol.service}</span>
+
+              <!-- View Details — NGO only -->
+              <button class="view-btn" onclick="handleViewDetails(${vol.id})">View Details</button>
+
+            </div>
+          </div>`;
+      });
+    }
+
+
+    /* ----------------------------------------------------------
+       3. HANDLE VIEW DETAILS
+          Checks localStorage role
+          NGO → opens popup
+          Others → access denied
+    ---------------------------------------------------------- */
+    function handleViewDetails(id) {
+      const role = localStorage.getItem("role");
+      if (role === "ngo") { openModal(id); }
+      else { showAccessDenied(); }
+    }
+
+
+    /* ----------------------------------------------------------
+       4. OPEN POPUP — fill volunteer details
+    ---------------------------------------------------------- */
+    function openModal(id) {
+      const v = allVolunteers.find(v => v.id === id);
+      if (!v) return;
+
+      /* Fill popup fields */
+      document.getElementById("modalImg").src                  = v.image        || fallbackImg;
+      document.getElementById("modalName").textContent         = v.name;
+      document.getElementById("modalService").textContent      = v.service;
+      document.getElementById("modalProfession").textContent   = v.profession;
+      document.getElementById("modalAbout").textContent = v.description;
+      document.getElementById("modalCapacity").textContent     = v.capacity     || "Not specified";
+      document.getElementById("modalLocation").textContent     = v.location;
+      document.getElementById("modalPhone").textContent        = v.phone        || "Not provided";
+      document.getElementById("modalAvailability").textContent = v.availability || "Not specified";
+
+      /* Avail button */
+      document.getElementById("availBtn").onclick = () => {
+        alert("Request sent! The volunteer will be notified.");
+        closeModal();
+      };
+
+      document.getElementById("modalOverlay").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+
+    /* ----------------------------------------------------------
+       5. CLOSE MODAL
+    ---------------------------------------------------------- */
+    function closeModal() {
+      document.getElementById("modalOverlay").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    function closeModalOnOverlay(e) {
+      if (e.target === document.getElementById("modalOverlay")) closeModal();
+    }
+
+
+    /* ----------------------------------------------------------
+       6. ACCESS DENIED — show and close
+    ---------------------------------------------------------- */
+    function showAccessDenied() {
+      document.getElementById("accessDenied").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeAccessDenied() {
+      document.getElementById("accessDenied").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    function closeAccessDeniedOnOverlay(e) {
+      if (e.target === document.getElementById("accessDenied")) closeAccessDenied();
+    }
+
+    /* Escape key closes any open popup */
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") { closeModal(); closeAccessDenied(); }
+    });
+
+  </script>
+
+</body>
+</html>

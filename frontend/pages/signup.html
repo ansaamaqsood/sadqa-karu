@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - Sadqa Karu</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ============================================
+       SIGNUP PAGE - OWN CSS
+       ============================================ */
+
+    body { background: #f5f5f5; }
+
+    /* Page wrapper */
+    .signup-page {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    /* White card */
+    .signup-card {
+      background: white;
+      width: 100%;
+      max-width: 480px;
+      padding: 42px 38px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    /* Logo */
+    .card-logo {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #111;
+    }
+
+    .card-logo span { color: #4E9D73; }
+
+    /* Heading */
+    .signup-card h2 {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #111;
+      margin: 0 0 4px;
+    }
+
+    /* Subtitle */
+    .signup-card .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin: 0 0 28px;
+    }
+
+    /* Field groups */
+    .form-group { margin-bottom: 16px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    /* Inputs, select, textarea */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      box-sizing: border-box;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #4E9D73;
+      background: white;
+    }
+
+    .form-group textarea { min-height: 80px; resize: vertical; }
+
+    /* Two fields side by side */
+    .form-row { display: flex; gap: 14px; }
+    .form-row .form-group { flex: 1; }
+
+    /* Extra fields per role — hidden by default */
+    .extra-fields { display: none; }
+    .extra-fields.show { display: block; }
+
+    /* NGO pending notice */
+    .ngo-notice {
+      background: #fff4e0;
+      border: 1px solid #f5d88a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #7a5c00;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .ngo-notice.show { display: block; }
+
+    /* Message box */
+    .msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .msg.success { background: #eaf5ee; color: #2d6a4f; display: block; }
+    .msg.error   { background: #fdecea; color: #c0392b; display: block; }
+
+    /* Submit button */
+    .signup-btn {
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+
+    .signup-btn:hover { background: #3a7c5c; }
+
+    /* Login link */
+    .login-link {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 18px;
+    }
+
+    .login-link a { color: #4E9D73; font-weight: 700; text-decoration: none; }
+    .login-link a:hover { text-decoration: underline; }
+
+    /* Success screen */
+    .success-screen { display: none; text-align: center; padding: 20px 0; }
+    .success-screen .s-icon { font-size: 52px; display: block; margin-bottom: 14px; }
+    .success-screen h3 { font-size: 20px; margin: 0 0 8px; color: #111; }
+    .success-screen p  { color: #666; font-size: 14px; margin: 0 0 20px; }
+    .success-screen a  { color: #4E9D73; font-weight: 700; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .signup-card { padding: 28px 20px; }
+      .form-row { flex-direction: column; gap: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR — same on all pages -->
+  <header class="navbar">
+    <div class="logo">Sadqa <span>Karu</span></div>
+    <div class="nav-links">
+      <a href="home.html"           style="font-weight:bold;">Home</a>
+      <a href="ngos.html"           style="font-weight:bold;">NGOs</a>
+      <a href="donations.html"      style="font-weight:bold;">Donation</a>
+      <a href="volunteer.html" style="font-weight:bold;">Volunteer</a>
+      <a href="signup.html"         style="font-weight:bold;">Sign Up</a>
+    </div>
+  </header>
+  <!-- SIGNUP PAGE -->
+  <div class="signup-page">
+    <div class="signup-card">
+
+      <!-- FORM SECTION -->
+      <div id="formSection">
+
+        <div class="card-logo">Sadqa <span>Karu</span></div>
+        <h2>Create Account</h2>
+        <p class="subtitle">Join us and start making a difference</p>
+
+        <!-- NGO pending approval notice -->
+        <div class="ngo-notice" id="ngoNotice">
+          ⚠️ NGO and Volunteer accounts require admin approval before activation.
+        </div>
+
+        <!-- Message box -->
+        <div id="msg" class="msg"></div>
+
+        <!-- ROLE DROPDOWN -->
+        <div class="form-group">
+          <label for="roleSelect">I am a...</label>
+          <select id="roleSelect" onchange="selectRole(this.value)">
+            <option value="">-- Select your role --</option>
+            <option value="donor"> Donor</option>
+            <option value="volunteer"> Volunteer</option>
+            <option value="ngo"> NGO</option>
+            <option value="admin"> Admin</option>
+          </select>
+        </div>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="e.g. Ahmed Khan">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com">
+        </div>
+
+        <!-- Phone + City -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+92 300 0000000">
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" placeholder="e.g. Karachi">
+          </div>
+        </div>
+
+        <!-- Password + Confirm -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min. 6 characters">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Repeat password">
+          </div>
+        </div>
+
+        <!-- VOLUNTEER EXTRA FIELDS -->
+        <div class="extra-fields" id="volunteerFields">
+          <div class="form-group">
+            <label for="volProfession">Profession</label>
+            <input type="text" id="volProfession" placeholder="e.g. Doctor, Teacher, Engineer">
+          </div>
+          <div class="form-group">
+            <label for="volService">Service You Offer</label>
+            <select id="volService">
+              <option value="">-- Select service type --</option>
+              <option value="Medical">Medical</option>
+              <option value="Education">Education</option>
+              <option value="IT Training">IT Training</option>
+              <option value="Food & Cooking">Food & Cooking</option>
+              <option value="Mental Health">Mental Health</option>
+              <option value="Legal Aid">Legal Aid</option>
+              <option value="Construction">Construction</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- NGO EXTRA FIELDS -->
+        <div class="extra-fields" id="ngoFields">
+          <div class="form-group">
+            <label for="ngoName">NGO / Organization Name</label>
+            <input type="text" id="ngoName" placeholder="e.g. Edhi Foundation">
+          </div>
+          <div class="form-group">
+            <label for="ngoDesc">About Your NGO</label>
+            <textarea id="ngoDesc" placeholder="Describe what your NGO does..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="ngoCategory">Category</label>
+            <select id="ngoCategory">
+              <option value="">-- Select category --</option>
+              <option value="Welfare">Welfare</option>
+              <option value="Education">Education</option>
+              <option value="Health">Health</option>
+              <option value="Food & Shelter">Food & Shelter</option>
+              <option value="Disaster Relief">Disaster Relief</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ADMIN EXTRA FIELDS -->
+        <div class="extra-fields" id="adminFields">
+          <div class="form-group">
+            <label for="adminDept">Department</label>
+            <select id="adminDept">
+              <option value="">-- Select department --</option>
+              <option value="Operations">Operations</option>
+              <option value="Support">Support</option>
+              <option value="Management">Management</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="adminCode">Admin Access Code</label>
+            <input type="password" id="adminCode" placeholder="Enter admin access code">
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button class="signup-btn" onclick="submitSignup()">Create Account</button>
+
+        <!-- Login link -->
+        <div class="login-link">
+          Already have an account? <a href="login.html">Login</a>
+        </div>
+
+      </div>
+      <!-- END FORM SECTION -->
+
+      <!-- SUCCESS SCREEN -->
+      <div class="success-screen" id="successScreen">
+        <span class="s-icon"></span>
+        <h3 id="successTitle">Account Created!</h3>
+        <p id="successMsg">Your account is ready. You can now login.</p>
+        <a href="login.html">Go to Login →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER — same on all pages -->
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="logo">Sadqa <span>Karu</span></div>
+        <p>Helping communities through donations and sharing.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="ngos.html">NGOs</a>
+        <a href="donation-list.html">Donations</a>
+        <a href="volunteer-list.html">Volunteer</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@sadqa.com</p>
+        <p>Phone: +92 300 1234567</p>
+      </div>
+      <div class="footer-section">
+        <h4>Follow Us</h4>
+        <a href="#"> Facebook</a>
+        <a href="#"> Instagram</a>
+        <a href="#"> Twitter</a>
+        <a href="#">▶ YouTube</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Sadqa Karu. All rights reserved.</div>
+  </div>
+
+  <script>
+
+    /* Currently selected role */
+    let selectedRole = "";
+
+    /* ----------------------------------------------------------
+       1. SELECT ROLE — shows correct extra fields
+    ---------------------------------------------------------- */
+    function selectRole(role) {
+      selectedRole = role;
+
+      /* Hide all extra fields */
+      ["volunteer", "ngo", "admin"].forEach(r => {
+        document.getElementById(r + "Fields").classList.remove("show");
+      });
+
+      /* Show selected role fields */
+      if (role && role !== "donor") {
+        document.getElementById(role + "Fields").classList.add("show");
+      }
+
+      /* Show notice for NGO and volunteer */
+      const notice = document.getElementById("ngoNotice");
+      if (role === "ngo" || role === "volunteer") {
+        notice.classList.add("show");
+      } else {
+        notice.classList.remove("show");
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       2. SUBMIT SIGNUP
+    ---------------------------------------------------------- */
+    async function submitSignup() {
+
+      /* Check role selected */
+      if (!selectedRole) {
+        showMsg("error", "Please select your role.");
+        return;
+      }
+
+      /* Read common fields */
+      const name            = document.getElementById("name").value.trim();
+      const email           = document.getElementById("email").value.trim();
+      const phone           = document.getElementById("phone").value.trim();
+      const city            = document.getElementById("city").value.trim();
+      const password        = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      /* Validate common fields */
+      if (!name)    { showMsg("error", "Please enter your name.");    return; }
+      if (!email)   { showMsg("error", "Please enter your email.");   return; }
+      if (!phone)   { showMsg("error", "Please enter your phone.");   return; }
+      if (!city)    { showMsg("error", "Please enter your city.");    return; }
+      if (!password){ showMsg("error", "Please enter a password.");   return; }
+      if (password.length < 6) {
+        showMsg("error", "Password must be at least 6 characters.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showMsg("error", "Passwords do not match.");
+        return;
+      }
+
+      /* Build data object */
+      const data = { name, email, phone, city, password, role: selectedRole };
+
+      /* Validate volunteer fields */
+      if (selectedRole === "volunteer") {
+        const profession = document.getElementById("volProfession").value.trim();
+        const service    = document.getElementById("volService").value;
+        if (!profession) { showMsg("error", "Please enter your profession."); return; }
+        if (!service)    { showMsg("error", "Please select your service.");   return; }
+        data.profession = profession;
+        data.service    = service;
+      }
+
+      /* Validate NGO fields */
+      if (selectedRole === "ngo") {
+        const ngoName     = document.getElementById("ngoName").value.trim();
+        const ngoDesc     = document.getElementById("ngoDesc").value.trim();
+        const ngoCategory = document.getElementById("ngoCategory").value;
+        if (!ngoName)     { showMsg("error", "Please enter NGO name.");     return; }
+        if (!ngoDesc)     { showMsg("error", "Please describe your NGO."); return; }
+        if (!ngoCategory) { showMsg("error", "Please select a category."); return; }
+        data.ngoName     = ngoName;
+        data.ngoDesc     = ngoDesc;
+        data.ngoCategory = ngoCategory;
+      }
+
+      /* Validate admin fields */
+      if (selectedRole === "admin") {
+        const dept      = document.getElementById("adminDept").value;
+        const adminCode = document.getElementById("adminCode").value.trim();
+        if (!dept)      { showMsg("error", "Please select your department."); return; }
+        if (!adminCode) { showMsg("error", "Please enter the admin code.");   return; }
+        data.department = dept;
+        data.adminCode  = adminCode;
+      }
+
+      try {
+        /* Send to backend */
+        const res = await fetch("http://localhost:3000/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          showSuccess();
+        } else {
+          showMsg("error", result.message || "Signup failed. Try again.");
+        }
+
+      } catch (err) {
+        /* Demo mode */
+        showSuccess();
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       3. SHOW SUCCESS SCREEN
+    ---------------------------------------------------------- */
+    function showSuccess() {
+      document.getElementById("formSection").style.display   = "none";
+      document.getElementById("successScreen").style.display = "block";
+
+      if (selectedRole === "ngo") {
+        document.getElementById("successTitle").textContent = "Application Submitted! 🏢";
+        document.getElementById("successMsg").textContent   =
+          "Your NGO account is pending admin approval. You will receive an email once approved.";
+      } else if (selectedRole === "volunteer") {
+        document.getElementById("successTitle").textContent = "Application Submitted! 🩺";
+        document.getElementById("successMsg").textContent   =
+          "Your volunteer account is pending admin approval. You will receive an email once approved.";
+      } else if (selectedRole === "admin") {
+        document.getElementById("successTitle").textContent = "Admin Request Sent!";
+        document.getElementById("successMsg").textContent   =
+          "Your admin account request is under review.";
+      } else {
+        document.getElementById("successTitle").textContent = "Account Created! 🎉";
+        document.getElementById("successMsg").textContent   =
+          "Your account is ready. You can now login.";
+      }
+    }
+
+
+    /* Show message helper */
+    function showMsg(type, text) {
+      const msg       = document.getElementById("msg");
+      msg.className   = "msg " + type;
+      msg.textContent = text;
+    }
+
+  </script>
+
+</body>
+</html>

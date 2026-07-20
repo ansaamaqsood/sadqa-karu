@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sadqa Karu</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">Sadqa <span>Karu</span></div>
+
+ <div class="navbar">
+   <!-- <h2>Sadqa <span style="color:green;">Karu</span></h2> -->
+  <div class="nav-links">
+    <a href="home.html" style="font-weight: bold; color: #4E9D73;">Home</a>
+    <a href="Ngo-list.html" style="font-weight: bold;">NGOs</a>
+    <a href="donation-list.html" style="font-weight: bold;">Donations</a>
+    <a href="volunteer.html" style="font-weight: bold;">Volunteer</a>
+      <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+
+  </div>
+</div>
+  
+</header>
+
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-left">
+    <h1>Make a Difference Today</h1>
+    <p>Help communities by donating items, money, or time.</p>
+
+    <div class="hero-buttons">
+      <a href="Donations.html" class="btn-primary">Donate Now</a>
+      <a href="ngos.html" class="btn-secondary">Explore NGOs</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <img src="../images/home.jpg" alt="donation">
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<!-- <section class="categories">
+  <h2>What You Can Donate</h2>
+
+  <div class="category-grid">
+    <div class="cat-card">👕 Clothes</div>
+    <div class="cat-card">📚 Books</div>
+    <div class="cat-card">🪑 Furniture</div>
+    <div class="cat-card">🍛 Food</div>
+  </div>
+</section> -->
+
+<div class="donation-categories">
+  <h2>What You Can Donate</h2>
+
+  <div class="category-list">
+
+    <div class="category-card">
+      <span>👕</span> Clothes
+    </div>
+
+    <div class="category-card">
+      <span>📚</span> Books
+    </div>
+
+    <div class="category-card">
+      <span>🪑</span> Furniture
+    </div>
+
+    <div class="category-card">
+      <span>🍱</span> Food
+    </div>
+
+  </div>
+</div>
+
+<!-- NGO SECTION -->
+<section class="ngo-section">
+  <h2>Featured NGOs</h2>
+
+  <div class="ngo-grid">
+
+    <div class="ngo-card">
+      <h3>Edhi Foundation</h3>
+      <p>Providing shelter and food for needy people</p>
+      <a href="ngos.html">View Details</a>
+    </div>
+
+    <div class="ngo-card">
+      <h3>Saylani Welfare</h3>
+      <p>Helping communities with food and education</p>
+      <a href="ngos.html">View Details</a>
+    </div>
+
+    <div class="ngo-card">
+      <h3>Helping Hands</h3>
+      <p>Supporting poor families across Pakistan</p>
+      <a href="ngos.html">View Details</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps">
+  <h2>How It Works</h2>
+
+  <div class="steps-grid">
+    <div>📦 Upload Donation</div>
+    <div>🤖 AI Detects Category</div>
+    <div>🤝 NGO Receives</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+
+  <div class="footer-container">
+
+   
+    <div class="footer-section">
+    
+      <div class="logo">Sadqa <span>Karu</span></div>
+
+      <p>Helping communities through donations and sharing.</p>
+    </div>
+
+    <!-- LINKS -->
+    <div class="footer-section">
+      <h4>Quick Links</h4>
+      <a href="dashboard.html" >Home</a>
+      <a href="ngos.html">NGOs</a>
+      <a href="#">Community</a>
+      <a href="#">Contact</a>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-section">
+      <h4>Contact</h4>
+      <p>Email: info@sadqa.com</p>
+      <p>Phone: +92 300 1234567</p>
+    </div>
+
+    <!-- MAP -->
+    <div class="footer-section">
+      <h4>Our Location</h4>
+      <iframe 
+        src="https://maps.google.com/maps?q=karachi&t=&z=13&ie=UTF8&iwloc=&output=embed"
+        width="100%" height="150">
+      </iframe>
+    </div>
+    </div>
+<!-- BOTTOM -->
+  <div class="footer-bottom">
+    © 2026 Sadqa Karu. All rights reserved.
+  </div>
+
+  </div>
+<script>
+  const userName    = localStorage.getItem("name");
+  const navDisplay  = document.getElementById("navDisplay");
+  const navDropdown = document.getElementById("navDropdown");
+
+  if (userName) {
+    navDisplay.textContent = "Hi, " + userName;
+    navDisplay.style.color = "#4E9D73";
+    document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+    document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+  } else {
+    /* home.html is inside pages/ so just login.html */
+    navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>

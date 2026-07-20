@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)file:///C:/Users/Anas/Downloads/donations.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Donations - Sadqa Karu</title>
+   <link rel="stylesheet" href="../css/style.css">
+
+  <!-- Shared CSS -->
+  <!--<link rel="stylesheet" href="file:///C:/Users/Anas/css/style.css"> -->
+  <style>
+    /* ============================================
+       DONATIONS PAGE - OWN CSS
+       ============================================ */
+
+    /* ── PAGE TITLE SECTION ── */
+    .page-title {
+      text-align: center;
+      padding: 40px 20px 10px;
+    }
+
+    .page-title h1 {
+      font-size: 32px;
+      margin: 0 0 8px;
+    }
+
+    .page-title p {
+      color: #666;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    /* ── DONATIONS GRID ── */
+    .donations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 30px auto 60px;
+      padding: 0 40px;
+    }
+
+    /* ── DONATION CARD ── */
+    .donation-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .donation-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+    }
+
+    /* Item image */
+    .donation-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+        object-position: center;
+    }
+
+    /* Card body */
+    .donation-card-body {
+      padding: 16px;
+    }
+
+    /* Item name */
+    .donation-card-body h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #111;
+    }
+
+    /* Donor name */
+    .donation-card-body .donor-name {
+      font-size: 13px;
+      color: #777;
+      margin: 0 0 10px;
+    }
+
+    /* ── CONDITION BADGE ── */
+    .condition-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+
+    /* Badge colors by condition */
+    .condition-good  { background: #eaf5ee; color: #4E9D73; }
+    .condition-bad   { background: #fff4e0; color: #e08c00; }
+    .condition-worse { background: #fdecea; color: #d93025; }
+
+    /* ── VIEW DETAILS BUTTON ── */
+    .view-btn {
+      display: block;
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+      box-sizing: border-box;
+    }
+
+    .view-btn:hover {
+      background: #3a7c5c;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state span {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    /* ── SKELETON LOADING ── */
+    .skeleton-donation {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .skel {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+    }
+
+    .skel-img   { height: 180px; width: 100%; }
+    .skel-body  { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .skel-line  { height: 12px; border-radius: 6px; }
+    .skel-line.short  { width: 50%; }
+    .skel-line.long   { width: 80%; }
+    .skel-line.btn    { width: 100%; height: 36px; border-radius: 8px; margin-top: 4px; }
+
+    @keyframes shimmer {
+      0%   { background-position:  200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ============================================
+       POPUP / MODAL CSS
+       ============================================ */
+
+    /* Dark overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* Popup box */
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: popIn 0.25s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* Close button */
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #888;
+      background: none;
+      border: none;
+    }
+
+    .modal-close:hover { color: #333; }
+
+    /* Item image in popup */
+    .modal-item-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    /* Popup heading */
+    .modal-box h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: #111;
+    }
+
+    /* Info rows */
+    .modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .modal-info-row {
+      display: flex;
+      gap: 10px;
+      font-size: 14px;
+      color: #444;
+      align-items: flex-start;
+    }
+
+    .modal-info-row .label {
+      font-weight: 700;
+      color: #222;
+      min-width: 110px;
+      flex-shrink: 0;
+    }
+
+    /* Divider */
+    .modal-divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 14px 0;
+    }
+
+    /* ── NGO ACCESS DENIED MESSAGE ── */
+    .access-denied {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .access-denied.active {
+      display: flex;
+    }
+
+    .access-denied-box {
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: popIn 0.25s ease;
+    }
+
+    .access-denied-box span {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .access-denied-box h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #111;
+    }
+
+    .access-denied-box p {
+      color: #666;
+      font-size: 14px;
+      margin: 0 0 20px;
+    }
+
+    /* Login button inside access denied box */
+    .access-denied-box .login-btn {
+      display: inline-block;
+      background: #4E9D73;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      margin-right: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .access-denied-box .login-btn:hover { background: #3a7c5c; }
+
+    /* Cancel button */
+    .access-denied-box .cancel-btn {
+      display: inline-block;
+      background: #eee;
+      color: #444;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .access-denied-box .cancel-btn:hover { background: #ddd; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .donations-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .donations-grid { grid-template-columns: 1fr; padding: 0 20px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       NAVBAR — reused on all pages
+       ============================================================ -->
+  <!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">Sadqa <span>Karu</span></div>
+
+ <div class="navbar">
+   <!-- <h2>Sadqa <span style="color:green;">Karu</span></h2> -->
+  <div class="nav-links">
+    <a href="home.html" style="font-weight: bold; color: #4E9D73;">Home</a>
+    <a href="Ngo-list.html" style="font-weight: bold;">NGOs</a>
+    <a href="donation-list.html" style="font-weight: bold;">Donations</a>
+    <a href="volunteer.html" style="font-weight: bold;">Volunteer</a>
+    <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+
+  </div>
+</div>
+  
+</header>
+
+  <!-- ============================================================
+       PAGE TITLE
+       ============================================================ -->
+
+  <div class="page-title" style="display:flex; justify-content: center; align-items: center; padding: 40px; gap: 20px;">
+  <h1 style="margin: 0; font-size: 36px;">Available Donations</h1>
+
+  <a href="donations.html" class="btn-primary"
+     onmouseover="this.style.background='#3a7c5c'; this.style.transform='translateY(-3px)';"
+     onmouseout="this.style.background='#4E9D73'; this.style.transform='translateY(0)';"
+     style="padding: 12px 24px; font-size: 25px; font-weight: 600; background: #4E9D73; color: white; border-radius: 8px; text-decoration: none; transition: background 0.2s, transform 0.2s;">
+    Or Make Donation ?
+  </a>
+</div>
+<!-- Add this next to your existing title -->
+<div style="text-align:right; max-width:1100px; margin:0 auto; padding:0 40px;">
+  <button id="myDonationsBtn" onclick="toggleMyDonations()" 
+    style="background:#4E9D73; color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;">
+    My Donations
+  </button>
+  <button id="allDonationsBtn" onclick="toggleAllDonations()" 
+    style="background:#eee; color:#444; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600; margin-left:8px; display:none;">
+    All Donations
+  </button>
+</div>
+
+  <!-- ============================================================
+       DONATIONS GRID — filled by JavaScript
+       ============================================================ -->
+  <div class="donations-grid" id="donations-list">
+          <div class="donation-card">
+
+            <!-- Item image -->
+            <img src="./donation-ist_files/2503370.png" alt="Winter Jacket" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/2503/2503370.png&#39;">
+
+            <div class="donation-card-body">
+
+              <!-- Item name -->
+              <h3>Winter Jacket</h3>
+
+              <!-- Donor name (public) -->
+              <p class="donor-name">By: Ahmed Khan</p>
+
+              <!-- Condition badge -->
+              <span class="condition-badge condition-good">Good</span>
+
+              <!-- View Details button -->
+              <button class="view-btn" onclick="handleViewDetails(1)">
+                View Details
+              </button>
+
+            </div>
+          </div>
+        
+          <div class="donation-card">
+
+            <!-- Item image -->
+            <img src="./donation-ist_files/2436874.png" alt="School Books (Grade 5)" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/2503/2503370.png&#39;">
+
+            <div class="donation-card-body">
+
+              <!-- Item name -->
+              <h3>School Books (Grade 5)</h3>
+
+              <!-- Donor name (public) -->
+              <p class="donor-name">By: Sara Ahmed</p>
+
+              <!-- Condition badge -->
+              <span class="condition-badge condition-good">Good</span>
+
+              <!-- View Details button -->
+              <button class="view-btn" onclick="handleViewDetails(2)">
+                View Details
+              </button>
+
+            </div>
+          </div>
+        
+          <div class="donation-card">
+
+            <!-- Item image -->
+            <img src="./donation-ist_files/2078798.png" alt="Wooden Chair" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/2503/2503370.png&#39;">
+
+            <div class="donation-card-body">
+
+              <!-- Item name -->
+              <h3>Wooden Chair</h3>
+
+              <!-- Donor name (public) -->
+              <p class="donor-name">By: Usman Tariq</p>
+
+              <!-- Condition badge -->
+              <span class="condition-badge condition-bad">Bad</span>
+
+              <!-- View Details button -->
+              <button class="view-btn" onclick="handleViewDetails(3)">
+                View Details
+              </button>
+
+            </div>
+          </div>
+        
+          <div class="donation-card">
+
+            <!-- Item image -->
+            <img src="./donation-ist_files/3345396.png" alt="Baby Clothes Bundle" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/2503/2503370.png&#39;">
+
+            <div class="donation-card-body">
+
+              <!-- Item name -->
+              <h3>Baby Clothes Bundle</h3>
+
+              <!-- Donor name (public) -->
+              <p class="donor-name">By: Fatima Malik</p>
+
+              <!-- Condition badge -->
+              <span class="condition-badge condition-good">Good</span>
+
+              <!-- View Details button -->
+              <button class="view-btn" onclick="handleViewDetails(4)">
+                View Details
+              </button>
+
+            </div>
+          </div>
+        
+          <div class="donation-card">
+
+            <!-- Item image -->
+            <img src="./donation-ist_files/3209035.png" alt="Old Mattress" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/2503/2503370.png&#39;">
+
+            <div class="donation-card-body">
+
+              <!-- Item name -->
+              <h3>Old Mattress</h3>
+
+              <!-- Donor name (public) -->
+              <p class="donor-name">By: Bilal Raza</p>
+
+              <!-- Condition badge -->
+              <span class="condition-badge condition-worse">Worse</span>
+
+              <!-- View Details button -->
+              <button class="view-btn" onclick="handleViewDetails(5)">
+                View Details
+              </button>
+
+            </div>
+          </div>
+        
+          <div class="donation-card">
+
+            <!-- Item image -->
+            <img src="./donation-ist_files/2965567.png" alt="Rice (10kg Bag)" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/2503/2503370.png&#39;">
+
+            <div class="donation-card-body">
+
+              <!-- Item name -->
+              <h3>Rice (10kg Bag)</h3>
+
+              <!-- Donor name (public) -->
+              <p class="donor-name">By: Nadia Hussain</p>
+
+              <!-- Condition badge -->
+              <span class="condition-badge condition-good">Good</span>
+
+              <!-- View Details button -->
+              <button class="view-btn" onclick="handleViewDetails(6)">
+                View Details
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+  <!-- ============================================================
+       POPUP MODAL — only accessible to NGO accounts
+       ============================================================ -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box" id="modalBox">
+
+      <!-- Close button -->
+      <button class="modal-close" onclick="closeModal()">✕</button>
+
+      <!-- Item image -->
+      <img id="modalImg" src="file:///C:/Users/Anas/Downloads/donations.html" alt="Item" class="modal-item-img">
+
+      <!-- Item name -->
+      <h2 id="modalItemName"></h2>
+
+      <!-- Condition badge -->
+      <span class="condition-badge" id="modalCondition"></span>
+
+      <hr class="modal-divider">
+
+      <!-- Donation details rows -->
+      <div class="modal-info">
+
+        <div class="modal-info-row">
+          <span class="label">📝 Description</span>
+          <span id="modalDescription"></span>
+        </div>
+
+        <div class="modal-info-row">
+          <span class="label">👤 Donor Name</span>
+          <span id="modalDonorName"></span>
+        </div>
+
+        <div class="modal-info-row">
+          <span class="label">📞 Phone</span>
+          <span id="modalPhone"></span>
+        </div>
+
+        <div class="modal-info-row">
+          <span class="label">📍 Address</span>
+          <span id="modalAddress"></span>
+        </div>
+
+        <div class="modal-info-row">
+          <span class="label">📅 Posted</span>
+          <span id="modalDate"></span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ACCESS DENIED POPUP — shown when not logged in as NGO
+       ============================================================ -->
+  <div class="access-denied" id="accessDenied" onclick="closeAccessDeniedOnOverlay(event)">
+    <div class="access-denied-box">
+      <span>🔒</span>
+      <h3>NGO Login Required</h3>
+      <p>Only verified NGO accounts can view donor details.<br>Please login as an NGO to continue.</p>
+      <<button class="login-btn" onclick="window.location.href='login.html'">Login as NGO</button>
+      <button class="cancel-btn" onclick="closeAccessDenied()">Cancel</button>
+    </div>
+  </div>
+  <!-- EDIT DONATION MODAL -->
+<div class="modal-overlay" id="editModalOverlay" onclick="closeEditModalOnOverlay(event)">
+  <div class="modal-box">
+
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <h2 style="margin:0 0 20px;">Edit Donation</h2>
+
+    <!-- Item Name -->
+    <div class="modal-info-row" style="flex-direction:column; gap:6px; margin-bottom:14px;">
+      <label style="font-weight:700; font-size:13px;">Item Name</label>
+      <input type="text" id="editTitle" style="width:100%; padding:10px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;">
+    </div>
+
+    <!-- Description -->
+    <div class="modal-info-row" style="flex-direction:column; gap:6px; margin-bottom:14px;">
+      <label style="font-weight:700; font-size:13px;">Description</label>
+      <textarea id="editDescription" style="width:100%; padding:10px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; min-height:80px; box-sizing:border-box; resize:vertical;"></textarea>
+    </div>
+
+    <!-- Phone -->
+    <div class="modal-info-row" style="flex-direction:column; gap:6px; margin-bottom:14px;">
+      <label style="font-weight:700; font-size:13px;">Phone</label>
+      <input type="tel" id="editPhone" style="width:100%; padding:10px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;">
+    </div>
+
+    <!-- Address -->
+    <div class="modal-info-row" style="flex-direction:column; gap:6px; margin-bottom:20px;">
+      <label style="font-weight:700; font-size:13px;">Address</label>
+      <input type="text" id="editAddress" style="width:100%; padding:10px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box;">
+    </div>
+
+    <!-- Save button -->
+    <button onclick="saveEdit()" style="width:100%; background:#4E9D73; color:white; padding:13px; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer;">
+      Save Changes
+    </button>
+
+  </div>
+</div>
+
+  <!-- ============================================================
+       FOOTER — reused on all pages
+       ============================================================ -->
+  <div class="footer">
+    <div class="footer-container">
+
+      <!-- Brand -->
+      <div class="footer-section">
+        <div class="logo">Sadqa <span>Karu</span></div>
+        <p>Helping communities through donations and sharing.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="file:///C:/Users/Anas/Downloads/home.html">Home</a>
+        <a href="file:///C:/Users/Anas/Downloads/ngos.html">NGOs</a>
+        <a href="file:///C:/Users/Anas/Downloads/donations.html">Donations</a>
+        <a href="file:///C:/Users/Anas/Downloads/volunteer.html">Volunteer</a>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@sadqa.com</p>
+        <p>Phone: +92 300 1234567</p>
+      </div>
+
+      <!-- Social -->
+      <div class="footer-section">
+        <h4>Follow Us</h4>
+            <a href="home.html">Home</a>
+            <a href="ngos.html">NGOs</a>
+            <a href="donation-list.html">Donations</a>
+            <a href="volunteer-list.html">Volunteer</a>
+      </div>
+
+    </div>
+
+    <!-- Footer bottom -->
+    <div class="footer-bottom">
+      © 2026 Sadqa Karu. All rights reserved.
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — fetch donations, render cards, popup, access check
+       ============================================================ -->
+  <script>
+
+
+    const container = document.getElementById("donations-list");
+    let allDonations = [];
+
+    /* Fetch donations from real backend */
+fetch("http://localhost:3000/donations")
+  .then(res => res.json())
+  .then(data => {
+    allDonations = data;
+    renderDonations(allDonations);
+  })
+  .catch(err => {
+    console.log("Error fetching donations:", err);
+    container.innerHTML = `
+      <div class="empty-state">
+        <span>⚠️</span>
+        <p>Could not load donations. Make sure backend is running.</p>
+      </div>
+    `;
+  });
+
+
+
+
+/* NAVBAR — show name or Login */
+const userName = localStorage.getItem("name");
+const navDisplay  = document.getElementById("navDisplay");
+const navDropdown = document.getElementById("navDropdown");
+
+if (userName) {
+  /* Logged in — show name, hover shows logout */
+  navDisplay.textContent = "Hi, " + userName;
+  navDisplay.style.color = "#4E9D73";
+
+  /* Show dropdown on hover */
+  document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+  document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+
+} else {
+  /* Not logged in — show Login link */
+  navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+/* ----------------------------------------------------------
+   MY DONATIONS — filter to show only logged in user's donations
+   ALL DONATIONS — show all donations again
+---------------------------------------------------------- */
+let showingMyDonations = false;
+
+function toggleMyDonations() {
+  /* Get logged in user name from localStorage */
+  const myName = localStorage.getItem("name");
+
+  if (!myName) {
+    alert("Please login first to see your donations.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  showingMyDonations = true;
+
+  /* Filter donations by donor name */
+  const myDonations = allDonations.filter(d => d.donor_name === myName);
+
+  /* Show filtered list */
+  renderDonations(myDonations);
+
+  /* Switch buttons */
+  document.getElementById("myDonationsBtn").style.display  = "none";
+  document.getElementById("allDonationsBtn").style.display = "inline-block";
+}
+
+function toggleAllDonations() {
+  showingMyDonations = false;
+
+  /* Show all donations */
+  renderDonations(allDonations);
+
+  /* Switch buttons back */
+  document.getElementById("myDonationsBtn").style.display  = "inline-block";
+  document.getElementById("allDonationsBtn").style.display = "none";
+}
+/* Current donation being edited */
+let editingId = null;
+
+/* ----------------------------------------------------------
+   OPEN EDIT MODAL — pre-fill with current donation data
+---------------------------------------------------------- */
+function openEditModal(id) {
+  const item = allDonations.find(d => d.id === id);
+  if (!item) return;
+
+  editingId = id;
+
+  /* Pre-fill fields with current values */
+  document.getElementById("editTitle").value       = item.title;
+  document.getElementById("editDescription").value = item.description;
+  document.getElementById("editPhone").value        = item.phone;
+  document.getElementById("editAddress").value      = item.address;
+
+  /* Show modal */
+  document.getElementById("editModalOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+
+/* ----------------------------------------------------------
+   SAVE EDIT — sends updated data to backend
+---------------------------------------------------------- */
+async function saveEdit() {
+  const title       = document.getElementById("editTitle").value.trim();
+  const description = document.getElementById("editDescription").value.trim();
+  const phone       = document.getElementById("editPhone").value.trim();
+  const address     = document.getElementById("editAddress").value.trim();
+
+  if (!title)       { alert("Please enter item name."); return; }
+  if (!description) { alert("Please enter description."); return; }
+  if (!phone)       { alert("Please enter phone."); return; }
+  if (!address)     { alert("Please enter address."); return; }
+
+  try {
+    /* PUT request to backend with token */
+    const res = await fetch(`http://localhost:3000/donations/${editingId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type":  "application/json",
+        "authorization": localStorage.getItem("token")
+      },
+      body: JSON.stringify({ title, description, phone, address })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Donation updated successfully!");
+      closeEditModal();
+      /* Reload donations to show updated data */
+      location.reload();
+    } else {
+      alert(data.message || "Error updating donation.");
+    }
+
+  } catch (err) {
+    alert("Could not connect to backend.");
+  }
+}
+
+
+/* ----------------------------------------------------------
+   CLOSE EDIT MODAL
+---------------------------------------------------------- */
+function closeEditModal() {
+  document.getElementById("editModalOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+  editingId = null;
+}
+
+function closeEditModalOnOverlay(e) {
+  if (e.target === document.getElementById("editModalOverlay")) closeEditModal();
+}
+
+    /* ----------------------------------------------------------
+       2. RENDER donation cards into the grid
+    ---------------------------------------------------------- */
+    function renderDonations(list) {
+      container.innerHTML = "";
+
+      // Empty state
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <span>📦</span>
+            <p>No donations available at the moment.<br>Check back soon!</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Build each card — only shows item name, condition, donor name, image
+      list.forEach(item => {
+  const conditionClass = getConditionClass(item.condition_status);
+  const fallback = "https://cdn-icons-png.flaticon.com/512/2503/2503370.png";
+
+  /* Check if this donation belongs to logged in user */
+  const myName = localStorage.getItem("name");
+  const isMyDonation = item.donor_name === myName;
+
+  container.innerHTML += `
+    <div class="donation-card">
+      <img
+  src="${item.image ? 'data:image/jpeg;base64,' + item.image : fallback}"
+  alt="${item.title}"
+  onerror="this.src='${fallback}'"
+  style="width:100%; height:180px; object-fit:cover; object-position:center; display:block;"
+>
+      <div class="donation-card-body">
+        <h3>${item.title}</h3>
+        <p class="donor-name">By: ${item.donor_name}</p>
+        <span class="condition-badge ${conditionClass}">${item.condition_status}</span>
+
+        <!-- View Details button -->
+        <button class="view-btn" onclick="handleViewDetails(${item.id})">
+          View Details
+        </button>
+
+        <!-- Edit button — only shows on your own donations -->
+        ${isMyDonation ? `
+        <button class="view-btn" onclick="openEditModal(${item.id})"
+          style="background:#f0f0f0; color:#333; margin-top:8px;">
+          Edit
+        </button>` : ""}
+
+
+        <!-- Delete button — only shows on your own donations -->
+          ${isMyDonation ? `
+          <button class="view-btn" onclick="deleteDonation(${item.id})"
+            style="background:#fdecea; color:#d93025; margin-top:8px;">
+            Delete
+          </button>` : ""}
+
+      </div>
+    </div>
+  `;
+})
+}
+
+
+    /* ----------------------------------------------------------
+       3. CONDITION BADGE — returns CSS class based on condition
+    ---------------------------------------------------------- */
+    function getConditionClass(condition) {
+      if (!condition) return "";
+      const c = condition.toLowerCase();
+      if (c === "good")  return "condition-good";
+      if (c === "bad")   return "condition-bad";
+      if (c === "worse") return "condition-worse";
+      return "";
+    }
+
+
+    /* ----------------------------------------------------------
+       4. VIEW DETAILS — check if logged in as NGO first
+    ---------------------------------------------------------- */
+    function handleViewDetails(id) {
+  const role   = localStorage.getItem("role");
+  const myName = localStorage.getItem("name");
+
+  /* Find the donation */
+  const item = allDonations.find(d => d.id === id);
+
+  if (role === "ngo") {
+    /* NGO can see all donations details */
+    openModal(id);
+  } else if (role === "donor" && item.donor_name === myName) {
+    /* Donor can only see their own donation details */
+    openModal(id);
+  } else {
+    /* Everyone else — show access denied */
+    showAccessDenied();
+  }
+}
+
+
+    /* ----------------------------------------------------------
+       5. OPEN MODAL — fill in donation details
+    ---------------------------------------------------------- */
+    function openModal(id) {
+  const item = allDonations.find(d => d.id === id);
+  if (!item) return;
+
+  const fallback = "https://cdn-icons-png.flaticon.com/512/2503/2503370.png";
+  const conditionClass = getConditionClass(item.condition_status);
+
+ document.getElementById("modalImg").src = item.image ? 'data:image/jpeg;base64,' + item.image : fallback;
+  document.getElementById("modalItemName").textContent    = item.title;
+  document.getElementById("modalDescription").textContent = item.description;
+  document.getElementById("modalDonorName").textContent   = item.donor_name;
+  document.getElementById("modalPhone").textContent       = item.phone       || "Not provided";
+  document.getElementById("modalAddress").textContent     = item.address     || "Not provided";
+  document.getElementById("modalDate").textContent        = item.created_at  || "Not provided";
+
+  const badge = document.getElementById("modalCondition");
+  badge.textContent = item.condition_status;
+  badge.className   = `condition-badge ${conditionClass}`;
+
+  document.getElementById("modalOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+
+/* ----------------------------------------------------------
+   DELETE DONATION — only donor can delete their own
+---------------------------------------------------------- */
+async function deleteDonation(id) {
+
+  /* Confirm before deleting */
+  const confirm = window.confirm("Are you sure you want to delete this donation?");
+  if (!confirm) return;
+
+  try {
+    const res = await fetch(`http://localhost:3000/donations/${id}`, {
+      method: "DELETE",
+      headers: {
+        "authorization": localStorage.getItem("token")
+      }
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Donation deleted successfully!");
+      location.reload();
+    } else {
+      alert(data.message || "Error deleting donation.");
+    }
+
+  } catch (err) {
+    alert("Could not connect to backend.");
+  }
+}
+    /* ----------------------------------------------------------
+       6. CLOSE MODAL
+    ---------------------------------------------------------- */
+    function closeModal() {
+      document.getElementById("modalOverlay").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    // Close if clicked on dark overlay background
+    function closeModalOnOverlay(event) {
+      if (event.target === document.getElementById("modalOverlay")) {
+        closeModal();
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       7. ACCESS DENIED POPUP — show and close
+    ---------------------------------------------------------- */
+    function showAccessDenied() {
+      document.getElementById("accessDenied").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeAccessDenied() {
+      document.getElementById("accessDenied").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    // Close access denied if clicked on dark overlay
+    function closeAccessDeniedOnOverlay(event) {
+      if (event.target === document.getElementById("accessDenied")) {
+        closeAccessDenied();
+      }
+    }
+
+    // Close both popups with Escape key
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        closeModal();
+        closeAccessDenied();
+      }
+    });
+
+  </script>
+
+
+
+</body></html>

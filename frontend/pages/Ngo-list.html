@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)file:///C:/Users/Anas/Downloads/ngos_3.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>NGOs - Sadqa Karu</title>
+
+  <!-- Shared CSS -->
+  
+   <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ============================================
+       NGOs PAGE - OWN CSS
+       ============================================ */
+
+    /* ── PAGE HERO SECTION ── */
+    .page-hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 50px 60px 30px;
+      max-width: 1100px;
+      margin: auto;
+      gap: 30px;
+    }
+
+    .page-hero-left h1 {
+      font-size: 36px;
+      margin: 0 0 10px;
+    }
+
+    .page-hero-left p {
+      color: #555;
+      margin: 0 0 20px;
+      font-size: 15px;
+    }
+
+    .page-hero-right img {
+      width: 220px;
+      opacity: 0.85;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 420px;
+    }
+
+    .search-wrap input {
+      flex: 1;
+      padding: 11px 16px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .search-wrap input:focus {
+      border-color: #4E9D73;
+    }
+
+    .search-wrap button {
+      background: #4E9D73;
+      color: white;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .search-wrap button:hover {
+      background: #3a7c5c;
+    }
+
+    /* ── RESULTS COUNT ── */
+    .results-info {
+      max-width: 1100px;
+      margin: 0 auto 10px;
+      padding: 0 60px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* ── NGO GRID ── */
+    .ngo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+      max-width: 1100px;
+      margin: 0 auto 60px;
+      padding: 10px 60px 40px;
+    }
+
+    /* ── NGO CARD ── */
+    .ngo-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 28px 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.25s, box-shadow 0.25s;
+      gap: 16px;
+    }
+
+    .ngo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+    }
+
+    .ngo-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .ngo-img {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e8e8e8;
+      flex-shrink: 0;
+    }
+
+    .ngo-text h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      color: #111;
+    }
+
+    .ngo-text p {
+      margin: 0 0 4px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .ngo-text .ngo-location {
+      font-size: 12px;
+      color: #4E9D73;
+      font-weight: 600;
+    }
+
+    /* ── CATEGORY BADGE ── */
+    .ngo-badge {
+      display: inline-block;
+      background: #eaf5ee;
+      color: #4E9D73;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-bottom: 5px;
+    }
+
+    /* ── VIEW DETAILS BUTTON ── */
+    .ngo-action {
+      flex-shrink: 0;
+    }
+
+    .ngo-action button {
+      background: #4E9D73;
+      color: white;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .ngo-action button:hover {
+      background: #3a7c5c;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state span {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    /* ── SKELETON LOADING ── */
+    .skeleton-card {
+      background: white;
+      padding: 28px 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .skel {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+      border-radius: 6px;
+    }
+
+    .skel-circle  { width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0; }
+    .skel-lines   { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .skel-line    { height: 12px; }
+    .skel-line.short  { width: 45%; }
+    .skel-line.long   { width: 85%; }
+    .skel-line.xshort { width: 30%; }
+
+    @keyframes shimmer {
+      0%   { background-position:  200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ============================================
+       POPUP / MODAL CSS
+       ============================================ */
+
+    /* Dark overlay behind popup */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Show overlay when active */
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* Popup box */
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      max-width: 520px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* Close X button */
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #888;
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: #333;
+    }
+
+    /* NGO logo in popup */
+    .modal-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #eaf5ee;
+      display: block;
+      margin: 0 auto 16px;
+    }
+
+    /* Popup heading */
+    .modal-box h2 {
+      text-align: center;
+      margin: 0 0 6px;
+      font-size: 22px;
+      color: #111;
+    }
+
+    /* Category badge inside popup */
+    .modal-badge {
+      display: block;
+      text-align: center;
+      background: #eaf5ee;
+      color: #4E9D73;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      width: fit-content;
+      margin: 0 auto 18px;
+    }
+
+    /* Info rows inside popup */
+    .modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .modal-info-row {
+      display: flex;
+      gap: 10px;
+      font-size: 14px;
+      color: #444;
+      align-items: flex-start;
+    }
+
+    .modal-info-row .label {
+      font-weight: 700;
+      color: #222;
+      min-width: 90px;
+    }
+
+    /* Divider line */
+    .modal-divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 18px 0;
+    }
+
+    /* Contact NGO button in popup */
+    .modal-contact-btn {
+      display: block;
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      text-align: center;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .modal-contact-btn:hover {
+      background: #3a7c5c;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .page-hero       { flex-direction: column; padding: 30px 20px 20px; }
+      .page-hero-right img { width: 140px; }
+      .ngo-grid        { grid-template-columns: 1fr; padding: 10px 20px 40px; }
+      .results-info    { padding: 0 20px; }
+      .modal-box       { padding: 28px 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <link rel="stylesheet" href="file:///C:/Users/Anas/css/style.css"> -->
+ <header class="navbar">
+  <div class="logo">Sadqa <span>Karu</span></div>
+
+ <div class="navbar">
+   <!-- <h2>Sadqa <span style="color:green;">Karu</span></h2> -->
+  <div class="nav-links">
+    <a href="home.html" style="font-weight: bold; color: #4E9D73;">Home</a>
+    <a href="Ngo-list.html" style="font-weight: bold;">NGOs</a>
+    <a href="donation-list.html" style="font-weight: bold;">Donations</a>
+    <a href="volunteer.html" style="font-weight: bold;">Volunteer</a>
+    <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+
+  </div>
+</div>
+  
+</header>
+       <!--PAGE HERO — title + search bar -->
+  <div class="page-hero">
+    <div class="page-hero-left">
+      <h1>Find NGOs Making a Difference</h1>
+      <p>Connect with trusted, verified organizations working across Pakistan.</p>
+
+      <!-- Search bar -->
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Search by name, city or category..." oninput="filterNGOs()">
+        <button onclick="filterNGOs()">Search</button>
+      </div>
+    </div>
+
+    <div class="page-hero-right">
+      <img src="./Ngo-list_files/921347.png" alt="NGOs">
+    </div>
+  </div>
+
+  <!-- Results count label -->
+  <div class="results-info" id="resultsInfo">Showing 6 verified NGOs</div>
+
+  <!-- ============================================================
+       NGO CARDS GRID — filled by JavaScript below
+       ============================================================ -->
+  <div class="ngo-grid" id="ngo-list">
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img src="./Ngo-list_files/3135715.png" class="ngo-img" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/3135/3135715.png&#39;" alt="Edhi Foundation">
+              <div class="ngo-text">
+                <span class="ngo-badge">Welfare</span>
+                <h3>Edhi Foundation</h3>
+                <p>Providing shelter, food and ambulance services for those in need across Pakistan.</p>
+                <p class="ngo-location">📍 Karachi</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(1)">View Details</button>
+            </div>
+
+          </div>
+        
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img src="./Ngo-list_files/3135768.png" class="ngo-img" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/3135/3135715.png&#39;" alt="Saylani Welfare">
+              <div class="ngo-text">
+                <span class="ngo-badge">Education</span>
+                <h3>Saylani Welfare</h3>
+                <p>Helping communities with food, education and vocational training programs.</p>
+                <p class="ngo-location">📍 Lahore</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(2)">View Details</button>
+            </div>
+
+          </div>
+        
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img src="./Ngo-list_files/3135789.png" class="ngo-img" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/3135/3135715.png&#39;" alt="Helping Hands">
+              <div class="ngo-text">
+                <span class="ngo-badge">Food &amp; Shelter</span>
+                <h3>Helping Hands</h3>
+                <p>Supporting poor families across Pakistan with food, clothes and essential items.</p>
+                <p class="ngo-location">📍 Islamabad</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(3)">View Details</button>
+            </div>
+
+          </div>
+        
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img src="./Ngo-list_files/3135823.png" class="ngo-img" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/3135/3135715.png&#39;" alt="Al-Khidmat Foundation">
+              <div class="ngo-text">
+                <span class="ngo-badge">Relief</span>
+                <h3>Al-Khidmat Foundation</h3>
+                <p>Disaster relief, rehabilitation and community development for affected communities.</p>
+                <p class="ngo-location">📍 Peshawar</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(4)">View Details</button>
+            </div>
+
+          </div>
+        
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img src="./Ngo-list_files/3135755.png" class="ngo-img" onerror="this.src=39;https://cdn-icons-png.flaticon.com/512/3135/3135715.png&#39;" alt="Shaukat Khanum">
+              <div class="ngo-text">
+                <span class="ngo-badge">Health</span>
+                <h3>Shaukat Khanum</h3>
+                <p>Free cancer treatment and care for underprivileged patients across Pakistan.</p>
+                <p class="ngo-location">📍 Lahore</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(5)">View Details</button>
+            </div>
+
+          </div>
+        
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img 
+  src="./Ngo-list_files/3135706.png"
+  class="ngo-img"
+  alt="JDC Foundation"
+  onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';"
+/>
+              <div class="ngo-text">
+                <span class="ngo-badge">Education</span>
+                <h3>JDC Foundation</h3>
+                <p>Free education, healthcare and ration distribution across Sindh and Pakistan.</p>
+                <p class="ngo-location">📍 Karachi</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(6)">View Details</button>
+            </div>
+
+          </div>
+        </div>
+
+  <!-- ============================================================
+       POPUP MODAL — opens when "View Details" is clicked
+       ============================================================ -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box" id="modalBox">
+
+      <!-- Close button -->
+      <button class="modal-close" onclick="closeModal()">✕</button>
+
+      <!-- NGO logo -->
+      <img id="modalImg" src="file:///C:/Users/Anas/Downloads/ngos_3.html" alt="NGO Logo" class="modal-img">
+
+      <!-- NGO name -->
+      <h2 id="modalName"></h2>
+
+      <!-- Category badge -->
+      <span class="modal-badge" id="modalCategory"></span>
+
+      <hr class="modal-divider">
+
+      <!-- NGO details rows -->
+      <div class="modal-info">
+        <div class="modal-info-row">
+          <span class="label">📍 Location</span>
+          <span id="modalLocation"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">📝 About</span>
+          <span id="modalDescription"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">📞 Phone</span>
+          <span id="modalPhone"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">✉️ Email</span>
+          <span id="modalEmail"></span>
+        </div>
+        <div class="modal-info-row">
+          <span class="label">🕐 Working</span>
+          <span id="modalHours"></span>
+        </div>
+      </div>
+
+      <hr class="modal-divider">
+
+      <!-- Contact button -->
+      <button class="modal-contact-btn" id="modalContactBtn">Contact this NGO</button>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FOOTER — reused on all pages (same structure every time)
+       ============================================================ -->
+  <div class="footer">
+    <div class="footer-container">
+
+      <!-- Brand -->
+      <div class="footer-section">
+        <div class="logo">Sadqa <span>Karu</span></div>
+        <p>Helping communities through donations and sharing.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="file:///C:/Users/Anas/Downloads/home.html">Home</a>
+        <a href="file:///C:/Users/Anas/Downloads/ngos.html">NGOs</a>
+        <a href="file:///C:/Users/Anas/Downloads/donate.html">Donation</a>
+        <a href="file:///C:/Users/Anas/Downloads/volunteer.html">Volunteer</a>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@sadqa.com</p>
+        <p>Phone: +92 300 1234567</p>
+      </div>
+
+      <!-- Social -->
+      <div class="footer-section">
+        <h4>Follow Us</h4>
+        <a href="file:///C:/Users/Anas/Downloads/ngos_3.html#">📘 Facebook</a>
+        <a href="file:///C:/Users/Anas/Downloads/ngos_3.html#">📸 Instagram</a>
+        <a href="file:///C:/Users/Anas/Downloads/ngos_3.html#">🐦 Twitter</a>
+        <a href="file:///C:/Users/Anas/Downloads/ngos_3.html#">▶️ YouTube</a>
+      </div>
+
+    </div>
+
+    <!-- Footer bottom bar -->
+    <div class="footer-bottom">
+      © 2026 Sadqa Karu. All rights reserved.
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — NGO data fetch, render, search, popup
+       ============================================================ -->
+  <script>
+
+    const container   = document.getElementById("ngo-list");
+    const resultsInfo = document.getElementById("resultsInfo");
+    let allNGOs = [];   // holds all NGOs fetched from backend
+
+    /* ----------------------------------------------------------
+       1. FETCH approved NGOs from backend
+          Falls back to demo data if backend is not running
+    ---------------------------------------------------------- */
+    fetch("http://localhost:3000/ngos?status=approved")
+      .then(res => res.json())
+      .then(data => {
+        allNGOs = data;
+        renderNGOs(allNGOs);
+      })
+      .catch(() => {
+        // Demo data — remove once backend is connected
+        allNGOs = [
+          {
+            id: 1,
+            name: "Edhi Foundation",
+            description: "Providing shelter, food and ambulance services for those in need across Pakistan.",
+            location: "Karachi",
+            category: "Welfare",
+            phone: "+92 21 111 111 111",
+            email: "info@edhi.org",
+            hours: "24/7",
+            image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+          },
+          {
+            id: 2,
+            name: "Saylani Welfare",
+            description: "Helping communities with food, education and vocational training programs.",
+            location: "Lahore",
+            category: "Education",
+            phone: "+92 42 111 729 526",
+            email: "info@saylaniwelfare.com",
+            hours: "Mon–Sat, 9am–6pm",
+            image: "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+          },
+          {
+            id: 3,
+            name: "Helping Hands",
+            description: "Supporting poor families across Pakistan with food, clothes and essential items.",
+            location: "Islamabad",
+            category: "Food & Shelter",
+            phone: "+92 51 000 0000",
+            email: "contact@helpinghands.pk",
+            hours: "Mon–Fri, 10am–5pm",
+            image: "https://cdn-icons-png.flaticon.com/512/3135/3135789.png"
+          },
+          {
+            id: 4,
+            name: "Al-Khidmat Foundation",
+            description: "Disaster relief, rehabilitation and community development for affected communities.",
+            location: "Peshawar",
+            category: "Relief",
+            phone: "+92 91 111 254 432",
+            email: "info@alkhidmat.org",
+            hours: "Mon–Sat, 8am–7pm",
+            image: "https://cdn-icons-png.flaticon.com/512/3135/3135823.png"
+          },
+          {
+            id: 5,
+            name: "Shaukat Khanum",
+            description: "Free cancer treatment and care for underprivileged patients across Pakistan.",
+            location: "Lahore",
+            category: "Health",
+            phone: "+92 42 35 94 000",
+            email: "info@shaukatkhanum.org.pk",
+            hours: "Mon–Sat, 8am–8pm",
+            image: "https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
+          },
+          {
+            id: 6,
+            name: "JDC Foundation",
+            description: "Free education, healthcare and ration distribution across Sindh and Pakistan.",
+            location: "Karachi",
+            category: "Education",
+            phone: "+92 21 000 0000",
+            email: "info@jdcfoundation.org",
+            hours: "Mon–Sat, 9am–5pm",
+            image: "https://cdn-icons-png.flaticon.com/512/3135/3135706.png"
+          }
+        ];
+        renderNGOs(allNGOs);
+      });
+
+/* NAVBAR — show name or Login */
+const userName = localStorage.getItem("name");
+const navDisplay  = document.getElementById("navDisplay");
+const navDropdown = document.getElementById("navDropdown");
+
+if (userName) {
+  /* Logged in — show name, hover shows logout */
+  navDisplay.textContent = "Hi, " + userName;
+  navDisplay.style.color = "#4E9D73";
+
+  /* Show dropdown on hover */
+  document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+  document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+
+} else {
+  /* Not logged in — show Login link */
+  navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+    /* ----------------------------------------------------------
+       2. RENDER NGO cards into the grid
+    ---------------------------------------------------------- */
+    function renderNGOs(list) {
+      container.innerHTML = "";
+
+      // Empty state — no results
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <span>🔍</span>
+            <p>No NGOs found matching your search.<br>Try a different name or city.</p>
+          </div>
+        `;
+        resultsInfo.textContent = "";
+        return;
+      }
+
+      // Update results count
+      resultsInfo.textContent = `Showing ${list.length} verified NGO${list.length !== 1 ? "s" : ""}`;
+
+      // Build each card
+      list.forEach(ngo => {
+        const fallbackImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+        container.innerHTML += `
+          <div class="ngo-card">
+
+            <!-- Left: logo + info -->
+            <div class="ngo-left">
+              <img
+                src="${ngo.image || fallbackImg}"
+                class="ngo-img"
+                onerror="this.src='${fallbackImg}'"
+                alt="${ngo.name}"
+              >
+              <div class="ngo-text">
+                <span class="ngo-badge">${ngo.category || "Welfare"}</span>
+                <h3>${ngo.name}</h3>
+                <p>${ngo.description}</p>
+                <p class="ngo-location">📍 ${ngo.location}</p>
+              </div>
+            </div>
+
+            <!-- Right: view details button -->
+            <div class="ngo-action">
+              <button onclick="openModal(${ngo.id})">View Details</button>
+            </div>
+
+          </div>
+        `;
+      });
+    }
+
+
+    /* ----------------------------------------------------------
+       3. SEARCH / FILTER — runs on every keystroke
+    ---------------------------------------------------------- */
+    function filterNGOs() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      // If search is empty show all
+      if (!query) {
+        renderNGOs(allNGOs);
+        return;
+      }
+
+      // Filter by name, location, or category
+      const filtered = allNGOs.filter(ngo =>
+        ngo.name.toLowerCase().includes(query)     ||
+        ngo.location.toLowerCase().includes(query) ||
+        (ngo.category && ngo.category.toLowerCase().includes(query))
+      );
+
+      renderNGOs(filtered);
+    }
+
+    // Allow pressing Enter to search
+    document.getElementById("searchInput").addEventListener("keyup", e => {
+      if (e.key === "Enter") filterNGOs();
+    });
+
+
+    /* ----------------------------------------------------------
+       4. POPUP MODAL — open with NGO data
+    ---------------------------------------------------------- */
+    function openModal(id) {
+      // Find the NGO by ID
+      const ngo = allNGOs.find(n => n.id === id);
+      if (!ngo) return;
+
+      // Fill in modal fields
+      document.getElementById("modalImg").src         = ngo.image || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+      document.getElementById("modalName").textContent        = ngo.name;
+      document.getElementById("modalCategory").textContent    = ngo.category || "Welfare";
+      document.getElementById("modalLocation").textContent    = ngo.location;
+      document.getElementById("modalDescription").textContent = ngo.description;
+      document.getElementById("modalPhone").textContent       = ngo.phone    || "Not provided";
+      document.getElementById("modalEmail").textContent       = ngo.email    || "Not provided";
+      document.getElementById("modalHours").textContent       = ngo.hours    || "Not provided";
+
+      // Set contact button mailto
+      document.getElementById("modalContactBtn").onclick = () => {
+        window.location.href = "mailto:" + (ngo.email || "");
+      };
+
+      // Show overlay
+      document.getElementById("modalOverlay").classList.add("active");
+      document.body.style.overflow = "hidden"; // prevent background scroll
+    }
+
+    /* ----------------------------------------------------------
+       5. POPUP MODAL — close functions
+    ---------------------------------------------------------- */
+    function closeModal() {
+      document.getElementById("modalOverlay").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    // Close if user clicks on dark overlay (not on the box itself)
+    function closeModalOnOverlay(event) {
+      if (event.target === document.getElementById("modalOverlay")) {
+        closeModal();
+      }
+    }
+
+    // Close with Escape key
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeModal();
+    });
+
+  </script>
+
+
+
+</body></html>

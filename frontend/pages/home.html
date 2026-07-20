@@ -1,0 +1,693 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sadqa Karu</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">Sadqa <span>Karu</span></div>
+
+ <div class="navbar">
+   <!-- <h2>Sadqa <span style="color:green;">Karu</span></h2> -->
+  <div class="nav-links">
+    <a href="home.html" style="font-weight: bold; color: #4E9D73;">Home</a>
+    <a href="Ngo-list.html" style="font-weight: bold;">NGOs</a>
+    <a href="donation-list.html" style="font-weight: bold;">Donations</a>
+    <a href="volunteer.html" style="font-weight: bold;">Volunteer</a>
+
+      <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+
+  </div>
+</div>
+  
+
+
+
+
+
+  <style>
+    /* ============================================
+       HOME PAGE - OWN CSS
+       ============================================ */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; }
+
+    /* ── HERO SECTION ── */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 80px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 40px;
+    }
+
+    .hero-left { max-width: 500px; }
+
+    .hero-left h1 {
+      font-size: 48px;
+      font-weight: 900;
+      color: #111;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero-left h1 span { color: #4E9D73; }
+
+    .hero-left p {
+      font-size: 17px;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: #4E9D73;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      transition: background 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover { background: #3a7c5c; transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: white;
+      color: #4E9D73;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      border: 2px solid #4E9D73;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover { background: #4E9D73; color: white; transform: translateY(-2px); }
+
+    .hero-right img {
+      width: 480px;
+      max-width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    /* ── STATS BAR — dynamic from backend ── */
+    .stats-bar {
+      background: #4E9D73;
+      padding: 30px 80px;
+      display: flex;
+      justify-content: center;
+      gap: 80px;
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-num {
+      font-size: 32px;
+      font-weight: 900;
+      color: white;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 4px;
+    }
+
+    /* Shimmer loading for stats */
+    .stat-loading {
+      display: inline-block;
+      width: 50px;
+      height: 32px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position:  200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-wrap {
+      padding: 70px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .section-sub {
+      color: #888;
+      font-size: 15px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    /* ── HOW IT WORKS — TWO FLOWS ── */
+    .how-section { background: white; padding: 70px 80px; }
+
+    .how-inner { max-width: 1200px; margin: 0 auto; }
+
+    /* Two columns — donor and volunteer */
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .how-col {
+      background: #f5f5f5;
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .how-col-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #4E9D73;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Each step in flow */
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .flow-step:last-child { margin-bottom: 0; }
+
+    .flow-num {
+      width: 32px;
+      height: 32px;
+      background: #4E9D73;
+      color: white;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .flow-text h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 3px;
+    }
+
+    .flow-text p {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    /* ── WHAT YOU CAN DONATE / OFFER ── */
+    .contribute-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .contribute-col {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .contribute-col-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .contribute-items {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .contribute-item {
+      background: #eaf5ee;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .contribute-item:hover { transform: translateY(-3px); }
+
+    .contribute-item .ci-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+    .contribute-item span { font-size: 13px; font-weight: 700; color: #2d6a4f; }
+
+    .contribute-btn {
+      display: block;
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+
+    .contribute-btn:hover { background: #3a7c5c; }
+
+    /* ── FEATURED NGOs ── */
+    .ngo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 40px;
+    }
+
+    .ngo-card {
+      background: white;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .ngo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .ngo-card-top {
+      background: #eaf5ee;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ngo-avatar {
+      width: 40px;
+      height: 40px;
+      background: #4E9D73;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .ngo-card-top strong { font-size: 15px; color: #111; }
+
+    .ngo-card p {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .ngo-card a {
+      color: #4E9D73;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .ngo-card a:hover { text-decoration: underline; }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: linear-gradient(135deg, #2d6a4f, #4E9D73);
+      padding: 70px 80px;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .cta-section p {
+      color: rgba(255,255,255,0.85);
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+
+    .btn-white {
+      background: white;
+      color: #4E9D73;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.2s;
+      display: inline-block;
+      margin: 0 8px;
+    }
+
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    .btn-outline-white {
+      background: transparent;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      border: 2px solid white;
+      transition: all 0.2s;
+      display: inline-block;
+      margin: 0 8px;
+    }
+
+    .btn-outline-white:hover { background: white; color: #4E9D73; }
+
+    /* ── FOOTER ── */
+    .footer { background: #D9D9D9; padding: 50px 80px 0; }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+
+    .footer-section .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .footer-section .logo span { color: #4E9D73; }
+    .footer-section p { font-size: 13px; color: #555; line-height: 1.7; }
+    .footer-section h4 { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 16px; }
+
+    .footer-section a {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      text-decoration: none;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+
+    .footer-section a:hover { color: #4E9D73; }
+
+    .footer-bottom {
+      border-top: 1px solid #bbb;
+      padding: 18px 0;
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; padding: 40px 20px; text-align: center; }
+      .hero-buttons { justify-content: center; }
+      .hero-right img { width: 100%; }
+      .stats-bar { gap: 30px; padding: 30px 20px; flex-wrap: wrap; }
+      .section-wrap { padding: 40px 20px; }
+      .how-section { padding: 40px 20px; }
+      .how-grid { grid-template-columns: 1fr; }
+      .contribute-grid { grid-template-columns: 1fr; }
+      .ngo-grid { grid-template-columns: 1fr; }
+      .footer { padding: 40px 20px 0; }
+      .footer-container { grid-template-columns: 1fr 1fr; }
+      .cta-section { padding: 40px 20px; }
+    }
+  </style>
+</head>
+</header>
+
+<body>
+
+  
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-left">
+      <h1>Make a <span>Difference</span> Today</h1>
+      <p>Connect with NGOs, donate items, and offer your skills to help communities across Pakistan.</p>
+       <div class="hero-buttons">
+      <a href="Donations.html" class="btn-primary">Donate Now</a>
+      <a href="ngos.html" class="btn-secondary">Explore NGOs</a>
+    </div>
+    </div>
+    <div class="hero-right">
+    <img src="../images/home.jpg" alt="donation">
+  </div>
+  </section>
+
+  <!-- STATS BAR — numbers fetched from backend -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num" id="statNGOs"><span class="stat-loading"></span></span>
+      <div class="stat-label">Verified NGOs</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statDonations"><span class="stat-loading"></span></span>
+      <div class="stat-label">Donations Made</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statVolunteers"><span class="stat-loading"></span></span>
+      <div class="stat-label">Volunteers</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <div class="stat-label">Free Platform</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS — DONOR + VOLUNTEER FLOWS -->
+  <section class="how-section">
+    <div class="how-inner">
+      <h2 class="section-title">How It Works</h2>
+      
+
+      <div class="how-grid">
+
+        <!-- DONOR FLOW -->
+        <div class="how-col">
+          <div class="how-col-title"> As a Donor</div>
+
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h4>Create an Account</h4>
+              <p>Sign up as a donor — takes less than a minute.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h4>Upload Item Photo</h4>
+              <p>Take a photo of the item you want to donate.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h4>AI Detects Condition</h4>
+              <p>Our AI automatically rates condition as New, Good, Bad or Worse.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div class="flow-text">
+              <h4>NGO Accepts</h4>
+              <p>A verified NGO reviews and accepts your donation.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div class="flow-text">
+              <h4>Item Gets Collected</h4>
+              <p>You get notified and the NGO arranges pickup from your address.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- VOLUNTEER FLOW -->
+        <div class="how-col">
+          <div class="how-col-title">As a Volunteer</div>
+
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h4>Sign Up as Volunteer</h4>
+              <p>Create an account and mention your profession and service.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h4>Admin Approves Account</h4>
+              <p>Our admin reviews your profile and approves your account.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h4>Post Your Service</h4>
+              <p>Fill in what service you offer, your availability and location.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div class="flow-text">
+              <h4>NGO Contacts You</h4>
+              <p>Verified NGOs browse your profile and reach out to you.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div class="flow-text">
+              <h4>Help the Community</h4>
+              <p>You provide your service and make a real difference!</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+
+     
+
+  
+
+  <!-- CTA SECTION -->
+  <section class="cta-section">
+    <h2>Ready to Make a Difference?</h2>
+    <p>Join thousands of donors and volunteers helping communities across Pakistan</p>
+    <a href="donation-list.html" class="btn-white">Start Donating</a>
+    <a href="Volunteer.html" class="btn-outline-white">Join as Volunteer</a>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <span class="logo">Sadqa <span>Karu</span></span>
+        <p>Helping communities through donations and sharing. Connecting donors with verified NGOs across Pakistan.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="pages/ngos.html">NGOs</a>
+        <a href="pages/donation-list.html">Donations</a>
+        <a href="pages/volunteer-list.html">Volunteer</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <a href="mailto:info@sadqa.com">info@sadqa.com</a>
+        <a href="tel:+923001234567">+92 300 1234567</a>
+      </div>
+      
+    </div>
+    <div class="footer-bottom">© 2026 Sadqa Karu. All rights reserved.</div>
+  </div>
+
+  <script>
+    /* ── NAVBAR ── */
+    const userName    = localStorage.getItem("name");
+    const navDisplay  = document.getElementById("navDisplay");
+    const navDropdown = document.getElementById("navDropdown");
+
+    if (userName) {
+      navDisplay.textContent = "Hi, " + userName;
+      navDisplay.style.color = "#4E9D73";
+      document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+      document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+    } else {
+      navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "pages/login.html";
+    }
+
+    /* ── LOAD LIVE STATS FROM BACKEND ── */
+    Promise.all([
+      fetch("http://localhost:3000/ngos/count").then(r => r.json()).catch(() => ({ count: 8 })),
+      fetch("http://localhost:3000/donations/count").then(r => r.json()).catch(() => ({ count: 50 })),
+      fetch("http://localhost:3000/volunteers/count").then(r => r.json()).catch(() => ({ count: 20 }))
+    ]).then(([ngos, donations, volunteers]) => {
+      document.getElementById("statNGOs").textContent       = ngos.count       + "+";
+      document.getElementById("statDonations").textContent  = donations.count  + "+";
+      document.getElementById("statVolunteers").textContent = volunteers.count + "+";
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Sadqa Karu</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ============================================
+       LOGIN PAGE - OWN CSS
+       ============================================ */
+
+    /* Page layout — left text, right card */
+    .login-page {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 60px;
+      gap: 80px;
+      background: #f5f5f5;
+    }
+
+    /* ── LEFT SIDE ── */
+    .login-left { max-width: 440px; }
+
+    .login-left h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .login-left h1 span { color: #4E9D73; }
+
+    .login-left p {
+      color: #666;
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    /* Stats boxes */
+    .stats { display: flex; gap: 16px; }
+
+    .stat-box {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      flex: 1;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    /* Big number */
+    .stat-box .stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #4E9D73;
+      display: block;
+    }
+
+    /* Label under number */
+    .stat-box .stat-label {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* Loading shimmer for stats */
+    .stat-loading {
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position:  200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── RIGHT SIDE — login card ── */
+    .login-card {
+      background: white;
+      width: 100%;
+      max-width: 380px;
+      padding: 40px 36px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    .login-card h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #111;
+      margin: 0 0 4px;
+    }
+
+    .login-card .subtitle {
+      color: #888;
+      font-size: 13px;
+      margin: 0 0 28px;
+    }
+
+    /* Field groups */
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    /* Inputs and select */
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      box-sizing: border-box;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #4E9D73;
+      background: white;
+    }
+
+    /* Forgot password */
+    .forgot {
+      text-align: right;
+      font-size: 12px;
+      margin-top: -10px;
+      margin-bottom: 18px;
+    }
+
+    .forgot a { color: #4E9D73; text-decoration: none; font-weight: 600; }
+
+    /* Error / success message */
+    .msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .msg.success { background: #eaf5ee; color: #2d6a4f; display: block; }
+    .msg.error   { background: #fdecea; color: #c0392b; display: block; }
+
+    /* Login button */
+    .login-btn {
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .login-btn:hover { background: #3a7c5c; }
+
+    /* Signup link */
+    .signup-link {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 18px;
+    }
+
+    .signup-link a { color: #4E9D73; font-weight: 700; text-decoration: none; }
+    .signup-link a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .login-page { flex-direction: column; padding: 40px 20px; gap: 40px; }
+      .login-left  { text-align: center; }
+      .stats       { justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR — same on all pages -->
+  <header class="navbar">
+    <div class="logo">Sadqa <span>Karu</span></div>
+    <div class="nav-links">
+      <a href="home.html"           style="font-weight:bold;">Home</a>
+      <a href="ngos.html"           style="font-weight:bold;">NGOs</a>
+      <a href="donation-list.html"      style="font-weight:bold;">Donation</a>
+      <a href="Volunteer.html" style="font-weight:bold;">Volunteer</a>
+      <a href="signup.html"         style="font-weight:bold;">Sign Up</a>
+    </div>
+  </header>
+
+  <!-- LOGIN PAGE -->
+  <div class="login-page">
+
+    <!-- LEFT — welcome text + live stats -->
+    <div class="login-left">
+
+      <h1>Welcome Back to <span>Sadqa Karu</span></h1>
+      <p>Login to manage your donations, track requests, and connect with NGOs making a real difference.</p>
+
+      <!-- Stats — numbers fetched from backend API -->
+      <div class="stats">
+
+        <!-- NGO count -->
+        <div class="stat-box">
+          <span class="stat-num" id="statNGOs">
+            <span class="stat-loading"></span>
+          </span>
+          <div class="stat-label">NGOs Listed</div>
+        </div>
+
+        <!-- Donations count -->
+        <div class="stat-box">
+          <span class="stat-num" id="statDonations">
+            <span class="stat-loading"></span>
+          </span>
+          <div class="stat-label">Donations Made</div>
+        </div>
+
+        <!-- Volunteers count -->
+        <div class="stat-box">
+          <span class="stat-num" id="statVolunteers">
+            <span class="stat-loading"></span>
+          </span>
+          <div class="stat-label">Volunteers</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT — login card -->
+    <div class="login-card">
+
+      <h2>Login</h2>
+      <p class="subtitle">Enter your credentials to continue</p>
+
+      <!-- Message box -->
+      <div id="msg" class="msg"></div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com">
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Your password">
+      </div>
+
+      <!-- Forgot password -->
+      <div class="forgot">
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+        <label for="role">Login As</label>
+        <select id="role">
+          <option value="">-- Select your role --</option>
+          <option value="donor">Donor</option>
+          <option value="ngo">NGO</option>
+          <option value="volunteer">Volunteer</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Login button -->
+      <button class="login-btn" onclick="loginUser()">Login</button>
+
+      <!-- Signup link -->
+      <div class="signup-link">
+        Don't have an account? <a href="signup.html">Sign up</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER — same on all pages -->
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="logo">Sadqa <span>Karu</span></div>
+        <p>Helping communities through donations and sharing.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="ngos.html">NGOs</a>
+        <a href="donations.html">Donations</a>
+        <a href="volunteer-list.html">Volunteer</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@sadqa.com</p>
+        <p>Phone: +92 300 1234567</p>
+      </div>
+      <div class="footer-section">
+        <h4>Follow Us</h4>
+        <a href="#">📘 Facebook</a>
+        <a href="#">📸 Instagram</a>
+        <a href="#">🐦 Twitter</a>
+        <a href="#">▶️ YouTube</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Sadqa Karu. All rights reserved.</div>
+  </div>
+
+  <script>
+
+    /* ----------------------------------------------------------
+       1. FETCH LIVE STATS FROM BACKEND
+          Fetches NGO count, donation count, volunteer count
+          Falls back to demo numbers if backend not connected
+    ---------------------------------------------------------- */
+    async function loadStats() {
+      try {
+        /* Fetch all 3 counts at the same time */
+        const [ngoRes, donationRes, volunteerRes] = await Promise.all([
+          fetch("http://localhost:3000/ngos/count"),
+          fetch("http://localhost:3000/donations/count"),
+          fetch("http://localhost:3000/volunteers/count")
+        ]);
+
+        const ngoData       = await ngoRes.json();
+        const donationData  = await donationRes.json();
+        const volunteerData = await volunteerRes.json();
+
+        /* Update stat boxes with real numbers */
+        document.getElementById("statNGOs").textContent       = ngoData.count       + "+";
+        document.getElementById("statDonations").textContent  = donationData.count  + "+";
+        document.getElementById("statVolunteers").textContent = volunteerData.count  + "+";
+
+      } catch (err) {
+        /* DEMO fallback — backend not connected */
+        /* Replace these with real numbers once backend is ready */
+        console.log("Demo mode — showing fallback stats");
+
+        /* Count from localStorage if available */
+        const localDonations  = JSON.parse(localStorage.getItem("donations")  || "[]").length;
+        const localVolunteers = JSON.parse(localStorage.getItem("volunteers") || "[]").length;
+
+        document.getElementById("statNGOs").textContent       = "8+";
+        document.getElementById("statDonations").textContent  = (50 + localDonations)  + "+";
+        document.getElementById("statVolunteers").textContent = (20 + localVolunteers) + "+";
+      }
+    }
+
+    /* Load stats when page opens */
+    loadStats();
+
+
+    /* ----------------------------------------------------------
+       2. LOGIN FUNCTION
+          Validates → sends to backend → saves role → redirects
+    ---------------------------------------------------------- */
+    async function loginUser() {
+
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const role     = document.getElementById("role").value;
+
+      /* Validate all fields */
+      if (!email)    { showMsg("error", "Please enter your email.");    return; }
+      if (!password) { showMsg("error", "Please enter your password."); return; }
+      if (!role)     { showMsg("error", "Please select your role.");    return; }
+
+      try {
+        /* Send login request to backend */
+        const res = await fetch("http://localhost:3000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, role })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          /* Save token + role + user info in localStorage */
+          /* Token is needed for protected routes like POST /donations */
+                  
+                  localStorage.setItem("token",  data.token  || "");
+                  localStorage.setItem("role",   data.role   || role);
+                  localStorage.setItem("userId", data.userId || "");
+                  localStorage.setItem("name",   data.name   || "");
+
+          showMsg("success", "Login successful! Redirecting...");
+          setTimeout(() => redirectByRole(role), 1200);
+
+        } else {
+          showMsg("error", data.message || "Invalid email or password.");
+        }
+
+      } catch (err) {
+        /* DEMO MODE — backend not connected */
+        localStorage.setItem("role",   role);
+        localStorage.setItem("userId", "demo_123");
+        localStorage.setItem("name",   "Demo User");
+
+        showMsg("success", "Login successful! Redirecting...");
+        setTimeout(() => redirectByRole(role), 1200);
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       3. REDIRECT BY ROLE
+          Each role goes to their own page
+    ---------------------------------------------------------- */
+    function redirectByRole(role) {
+      if (role === "donor")     window.location.href = "home.html";
+      if (role === "ngo")       window.location.href = "home.html";
+      if (role === "volunteer") window.location.href = "home.html";
+      if (role === "admin")     window.location.href = "Admin.html";
+    }
+
+
+
+    /* Show message helper */
+    function showMsg(type, text) {
+      const msg       = document.getElementById("msg");
+      msg.className   = "msg " + type;
+      msg.textContent = text;
+    }
+
+    /* Enter key support */
+    document.addEventListener("keydown", e => {
+      if (e.key === "Enter") loginUser();
+    });
+
+  </script>
+
+</body>
+</html>

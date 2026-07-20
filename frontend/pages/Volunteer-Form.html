@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Offer Volunteer Work - Sadqa Karu</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ============================================
+       VOLUNTEER FORM PAGE - OWN CSS
+       ============================================ */
+
+    /* Page wrapper — centers the form */
+    .vol-page {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+    }
+
+    /* White form card */
+    .vol-container {
+      background: white;
+      max-width: 560px;
+      width: 100%;
+      padding: 40px 36px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    /* Form heading */
+    .vol-container h2 {
+      text-align: center;
+      font-size: 26px;
+      margin: 0 0 6px;
+      color: #111;
+    }
+
+    /* Subtitle */
+    .vol-container .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin: 0 0 28px;
+    }
+
+    /* Each field group */
+    .form-group { margin-bottom: 18px; }
+
+    /* Labels */
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    /* Inputs and textarea */
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      box-sizing: border-box;
+      transition: border 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #4E9D73;
+      background: white;
+    }
+
+    /* Textarea height */
+    .form-group textarea { min-height: 100px; resize: vertical; }
+
+    /* Photo upload box */
+    .upload-box {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      background: #fafafa;
+      position: relative;
+      transition: border 0.2s, background 0.2s;
+    }
+
+    .upload-box:hover {
+      border-color: #4E9D73;
+      background: #f0faf5;
+    }
+
+    /* Hide real file input — overlaid on the box */
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-box .upload-icon { font-size: 36px; display: block; margin-bottom: 8px; }
+    .upload-box p { margin: 0; font-size: 14px; color: #888; }
+    .upload-box p span { color: #4E9D73; font-weight: 600; }
+
+    /* Photo preview after selection */
+    #photoPreview {
+      display: none;
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover { background: #3a7c5c; }
+
+    /* Success screen */
+    .success-msg { display: none; text-align: center; padding: 30px 20px; }
+    .success-msg .success-icon { font-size: 52px; display: block; margin-bottom: 12px; }
+    .success-msg h3 { font-size: 20px; margin: 0 0 8px; color: #111; }
+    .success-msg p  { color: #666; font-size: 14px; margin: 0 0 20px; }
+    .success-msg a  { color: #4E9D73; font-weight: 600; text-decoration: none; }
+
+    @media (max-width: 600px) { .vol-container { padding: 28px 20px; } }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR — same on all pages -->
+  <header class="navbar">
+    <div class="logo">Sadqa <span>Karu</span></div>
+    <div class="nav-links">
+      <a href="home.html"           style="font-weight:bold;">Home</a>
+      <a href="ngos.html"           style="font-weight:bold;">NGOs</a>
+      <a href="donations.html"      style="font-weight:bold;">Donations</a>
+      <a href="Volunteer.html" style="font-weight:bold; color:#4E9D73;">Volunteer</a>
+      <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+    </div>
+  </header>
+
+  <!-- VOLUNTEER FORM -->
+  <div class="vol-page">
+    <div class="vol-container">
+
+      <!-- FORM SECTION — hidden after submit -->
+      <div id="formSection">
+
+        <h2>Offer Volunteer Work </h2>
+        <p class="subtitle">Fill in your details and the service you want to offer</p>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="volName">Full Name</label>
+          <input type="text" id="volName">
+        </div>
+
+        <!-- Profession -->
+           <div class="form-group">
+            <label for="volProfession">Profession</label>
+            <input type="text" id="volProfession" placeholder="e.g. Doctor, Teacher, Engineer">
+          </div>
+  
+        <!-- About / Description -->
+        <div class="form-group">
+          <label for="volAbout">About Your Service</label>
+          <textarea id="volAbout"></textarea>
+        </div>
+
+        <!-- How many people can you help -->
+        <div class="form-group">
+          <label for="volCapacity">How Many People Can You Help?</label>
+          <input type="text" id="volCapacity">
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="volLocation">Your Location / City</label>
+          <input type="text" id="volLocation">
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="volPhone">Phone Number</label>
+          <input type="tel" id="volPhone">
+        </div>
+
+        <!-- Availability -->
+        <div class="form-group">
+          <label for="volAvailability">Availability</label>
+          <input type="text" id="volAvailability" placeholder="e.g. Weekends, Mon-Wed 4pm-6pm...">
+        </div>
+
+        <!-- Photo Upload -->
+        <div class="form-group">
+          <label>Your Photo</label>
+
+          <!-- Click anywhere on box to open file picker -->
+          <div class="upload-box">
+            <input type="file" id="volImage" accept="image/*" onchange="previewPhoto(event)">
+            <span class="upload-icon"></span>
+            <p><span>upload</span> your photo</p>
+          
+          </div>
+
+          <!-- Preview shown after photo selected -->
+          <img id="photoPreview" src="" alt="Preview">
+        </div>
+
+        <!-- Submit button -->
+        <button class="submit-btn" onclick="submitVolunteer()">Post Volunteer Work</button>
+
+      </div>
+      <!-- END FORM SECTION -->
+
+      <!-- SUCCESS SCREEN — shown after submit -->
+      <div class="success-msg" id="successMsg">
+        <span class="success-icon">🎉</span>
+        <h3>Posted Successfully!</h3>
+        <p>Your volunteer work has been posted. NGOs will be able to see and contact you.</p>
+        <a href="volunteer-list.html">View Volunteer List →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER — same on all pages -->
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="logo">Sadqa <span>Karu</span></div>
+        <p>Helping communities through donations and sharing.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="ngos.html">NGOs</a>
+        <a href="donations.html">Donations</a>
+        <a href="volunteer-list.html">Volunteer</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@sadqa.com</p>
+        <p>Phone: +92 300 1234567</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Sadqa Karu. All rights reserved.</div>
+  </div>
+
+  <script>
+    /* NAVBAR — show name or Login */
+const userName = localStorage.getItem("name");
+const navDisplay  = document.getElementById("navDisplay");
+const navDropdown = document.getElementById("navDropdown");
+
+if (userName) {
+  /* Logged in — show name, hover shows logout */
+  navDisplay.textContent = "Hi, " + userName;
+  navDisplay.style.color = "#4E9D73";
+
+  /* Show dropdown on hover */
+  document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+  document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+
+} else {
+  /* Not logged in — show Login link */
+  navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+    /* Stores uploaded photo in base64 */
+    let uploadedPhotoBase64 = null;
+
+    /* ----------------------------------------------------------
+       1. PHOTO PREVIEW
+          Shows preview after user selects a photo
+          Saves base64 for localStorage
+    ---------------------------------------------------------- */
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        /* Show preview */
+        const preview = document.getElementById("photoPreview");
+        preview.src = e.target.result;
+        preview.style.display = "block";
+
+        /* Save full base64 string */
+        uploadedPhotoBase64 = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+
+    /* ----------------------------------------------------------
+       2. SUBMIT VOLUNTEER FORM
+          Validates fields
+          Saves to localStorage
+          volunteer-list.html reads localStorage and shows the card
+    ---------------------------------------------------------- */
+    async function submitVolunteer() {
+
+  /* Read all field values */
+  const profession   = document.getElementById("volProfession").value.trim();
+  const description  = document.getElementById("volAbout").value.trim();
+  const capacity     = document.getElementById("volCapacity").value.trim();
+  const location     = document.getElementById("volLocation").value.trim();
+  const phone        = document.getElementById("volPhone").value.trim();
+  const availability = document.getElementById("volAvailability").value.trim();
+
+  /* Validate all fields */
+  if (!profession)   { alert("Please enter your profession.");       return; }
+  if (!description)  { alert("Please describe your service.");       return; }
+  if (!capacity)     { alert("Please enter how many you can help."); return; }
+  if (!location)     { alert("Please enter your location.");         return; }
+  if (!phone)        { alert("Please enter your phone number.");     return; }
+  if (!availability) { alert("Please enter your availability.");     return; }
+  if (!uploadedPhotoBase64) { alert("Please upload your photo.");   return; }
+
+  try {
+    /* POST to backend with token in headers */
+    const res = await fetch("http://localhost:3000/volunteers", {
+      method: "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "authorization": localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        profession,
+        description,  /* backend column name is description not about */
+        capacity,
+        location,
+        phone,
+        availability,
+        image: uploadedPhotoBase64
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      document.getElementById("formSection").style.display = "none";
+      document.getElementById("successMsg").style.display  = "block";
+    } else {
+      alert(data.message || "Error posting volunteer work.");
+    }
+
+  } catch (err) {
+    /* Demo mode — show success without backend */
+    document.getElementById("formSection").style.display = "none";
+    document.getElementById("successMsg").style.display  = "block";
+  }
+}
+
+  </script>
+
+</body>
+</html>

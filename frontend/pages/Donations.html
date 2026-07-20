@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Donate - Sadqa Karu</title>
+
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ============================================
+       DONATE PAGE - OWN CSS
+       ============================================ */
+
+    /* Page wrapper - centers the form */
+    .donate-page {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+    }
+
+    /* White form card */
+    .donate-container {
+      background: white;
+      max-width: 560px;
+      width: 100%;
+      padding: 40px 36px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    /* Form heading */
+    .donate-container h2 {
+      text-align: center;
+      font-size: 26px;
+      margin: 0 0 6px;
+      color: #111;
+    }
+
+    /* Form subtitle under heading */
+    .donate-container .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin: 0 0 28px;
+    }
+
+    /* Each field group (label + input) */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    /* Field labels */
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    /* Normal input and textarea styling */
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      box-sizing: border-box;
+      transition: border 0.2s;
+      outline: none;
+    }
+
+    /* Focus effect on normal fields */
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #4E9D73;
+      background: white;
+    }
+
+    /* Textarea specific height */
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* ── IMAGE UPLOAD BOX ── */
+    /* Dashed border box for drag and drop / click to upload */
+    .upload-box {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: border 0.2s, background 0.2s;
+      background: #fafafa;
+      position: relative;
+    }
+
+    .upload-box:hover {
+      border-color: #4E9D73;
+      background: #f0faf5;
+    }
+
+    /* Hide real file input, overlay it on the box */
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-box .upload-icon {
+      font-size: 36px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .upload-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .upload-box p span {
+      color: #4E9D73;
+      font-weight: 600;
+    }
+
+    /* Image preview shown after user selects a photo */
+    #imagePreview {
+      display: none;
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+
+    /* ── AI RESULT BOX ── */
+    /* Colored box shown after AI returns the condition */
+    .condition-result {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Green for Good */
+    .condition-result.good  { background: #eaf5ee; color: #4E9D73; border: 1px solid #c3e6d0; }
+    /* Orange for Bad */
+    .condition-result.bad   { background: #fff4e0; color: #e08c00; border: 1px solid #f5d88a; }
+    /* Red for Worse */
+    .condition-result.worse { background: #fdecea; color: #d93025; border: 1px solid #f5c6c3; }
+    /* Blue for New */
+    .condition-result.new   { background: #e8f0fe; color: #1a73e8; border: 1px solid #b3c8f5; }
+
+    /* Spinning loader shown while AI is processing */
+    .ai-loading {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #ddd;
+      border-top-color: #4E9D73;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── CONDITION FIELD — LOCKED ── */
+    /* This field is readonly — ONLY AI can set its value */
+    /* User CANNOT click, type, or change this field at all */
+    .condition-locked {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;    /* grey background = locked */
+      color: #444;
+      box-sizing: border-box;
+      cursor: not-allowed;    /* shows blocked cursor on hover */
+      outline: none;
+    }
+
+    /* Small note under condition field */
+    .condition-note {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      background: #4E9D73;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #3a7c5c;
+    }
+
+    /* Disabled state while submitting */
+    .submit-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    /* ── SUCCESS SCREEN ── */
+    /* Shown after form is submitted successfully */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .success-msg .success-icon {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .success-msg h3 {
+      font-size: 20px;
+      margin: 0 0 8px;
+      color: #111;
+    }
+
+    .success-msg p {
+      color: #666;
+      font-size: 14px;
+      margin: 0 0 20px;
+    }
+
+    .success-msg a {
+      color: #4E9D73;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 600px) {
+      .donate-container { padding: 28px 20px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       NAVBAR — reused on all pages (same structure every time)
+       ============================================================ -->
+  <!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">Sadqa <span>Karu</span></div>
+  <div class="nav-links">
+    <a href="home.html"           style="font-weight:bold;">Home</a>
+    <a href="ngos.html"           style="font-weight:bold;">NGOs</a>
+    <a href="donation-list.html"      style="font-weight:bold; color:#4E9D73;">Donations</a>
+    <a href="Volunteer.html" style="font-weight:bold;">Volunteer</a>
+    <div id="navUser" style="position:relative; display:inline-block;">
+  <span id="navDisplay" style="font-weight:bold; cursor:pointer;"></span>
+  <div id="navDropdown" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:140px; z-index:999; padding:8px 0;">
+    <a href="#" onclick="logout()" style="display:block; padding:10px 16px; color:#d93025; font-weight:600; text-decoration:none; font-size:14px;">Logout</a>
+  </div>
+</div>
+  </div>
+</header>
+
+  <!-- ============================================================
+       DONATE FORM
+       ============================================================ -->
+  <div class="donate-page">
+    <div class="donate-container">
+
+      <!-- FORM SECTION — hidden after successful submit -->
+      <div id="formSection">
+
+        <h2>Make a Donation</h2>
+        <p class="subtitle">Fill in the details below and upload a photo of your item</p>
+
+        <!-- Item Name -->
+        <div class="form-group">
+          <label for="itemName">Item Name</label>
+          <input
+            type="text"
+            id="itemName"
+            placeholder="e.g. Winter Jacket, School Books..."
+          >
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            placeholder="Describe the item — size, color, usage, any defects..."
+          ></textarea>
+        </div>
+
+        <!-- Donor Name -->
+        <div class="form-group">
+          <label for="donorName">Your Name</label>
+          <input
+            type="text"
+            id="donorName"
+            placeholder="Enter your full name"
+          >
+        </div>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="+92 300 0000000"
+          >
+        </div>
+
+        <!-- Pickup Address -->
+        <div class="form-group">
+          <label for="address">Pickup Address</label>
+          <input
+            type="text"
+            id="address"
+            placeholder="Street, Area, City"
+          >
+        </div>
+
+        <!-- IMAGE UPLOAD -->
+        <div class="form-group">
+          <label>Item Photo</label>
+
+          <!-- Click anywhere on this box to open file picker -->
+          <div class="upload-box" id="uploadBox">
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              onchange="handleImageUpload(event)"
+            >
+            <span class="upload-icon"></span>
+            <p><span>Click to upload</span></p>
+                </div>
+
+          <!-- Preview shown after image selected -->
+          <img id="imagePreview" src="" alt="Item preview">
+
+          <!-- Spinner shown while AI is processing image -->
+          <div class="ai-loading" id="aiLoading">
+            <div class="spinner"></div>
+            <span>AI is analyzing item condition...</span>
+          </div>
+
+          <!-- Colored result box shown after AI responds -->
+          <div class="condition-result" id="conditionResult">
+            <span id="conditionIcon"></span>
+            <span id="conditionText"></span>
+          </div>
+
+        </div>
+
+        <!-- CONDITION FIELD — LOCKED — AI ONLY -->
+        <!-- readonly attribute makes this completely non-editable by user -->
+        <!-- Value is set ONLY by AI after image is uploaded -->
+        <div class="form-group">
+          <label for="condition">
+            Item Condition
+            <!-- Badge showing this is AI controlled -->
+            <span style="font-size:11px; color:#4E9D73; font-weight:400; margin-left:6px;">
+              
+            </span>
+          </label>
+
+          <!-- readonly = user cannot type. cursor:not-allowed shows its locked -->
+          <input
+            type="text"
+            id="condition"
+            class="condition-locked"
+            placeholder="Ai will determine the condotion"
+            readonly
+          >
+
+        </div>
+
+        <!-- Submit Button -->
+        <button class="submit-btn" id="submitBtn" onclick="submitDonation()">
+          Submit Donation
+        </button>
+
+      </div>
+      <!-- END FORM SECTION -->
+
+      <!-- SUCCESS SCREEN — shown after form submit -->
+      <div class="success-msg" id="successMsg">
+        <span class="success-icon"></span>
+        <h3>Donation Submitted!</h3>
+        <p>Your donation has been posted. NGOs will review it and get in touch with you soon.</p>
+        <a href="donations.html">View All Donations →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+<div class="footer">
+
+  <div class="footer-container">
+
+   
+    <div class="footer-section">
+    
+      <div class="logo">Sadqa <span>Karu</span></div>
+
+      <p>Helping communities through donations and sharing.</p>
+    </div>
+
+    <!-- LINKS -->
+    <div class="footer-section">
+      <h4>Quick Links</h4>
+      <a href="dashboard.html" >Home</a>
+      <a href="ngos.html">NGOs</a>
+      <a href="#">Community</a>
+      <a href="#">Contact</a>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-section">
+      <h4>Contact</h4>
+      <p>Email: info@sadqa.com</p>
+      <p>Phone: +92 300 1234567</p>
+    </div>
+
+    
+<!-- BOTTOM -->
+  <div class="footer-bottom">
+    © 2026 Sadqa Karu. All rights reserved.
+  </div>
+
+  </div>
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+
+    /* Global — stores uploaded image in base64 for API call */
+    let uploadedImageBase64 = null;
+
+    /* ----------------------------------------------------------
+       1. HANDLE IMAGE UPLOAD
+          Runs when user selects a photo
+          - Shows image preview
+          - Sends image to AI for condition detection
+    ---------------------------------------------------------- */
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      /* Read file and convert to base64 */
+      const reader = new FileReader();
+      reader.onload = function(e) {
+
+        /* Show image preview */
+        const preview = document.getElementById("imagePreview");
+        preview.src = e.target.result;
+        preview.style.display = "block";
+
+        /* Save base64 — remove "data:image/...;base64," prefix */
+        uploadedImageBase64 = e.target.result.split(",")[1];
+
+        /* Send to AI to get condition */
+        checkConditionWithAI(uploadedImageBase64, file.type);
+      };
+      reader.readAsDataURL(file);
+    }
+
+
+    /* NAVBAR — show name or Login */
+const userName = localStorage.getItem("name");
+const navDisplay  = document.getElementById("navDisplay");
+const navDropdown = document.getElementById("navDropdown");
+
+if (userName) {
+  /* Logged in — show name, hover shows logout */
+  navDisplay.textContent = "Hi, " + userName;
+  navDisplay.style.color = "#4E9D73";
+
+  /* Show dropdown on hover */
+  document.getElementById("navUser").onmouseenter = () => navDropdown.style.display = "block";
+  document.getElementById("navUser").onmouseleave = () => navDropdown.style.display = "none";
+
+} else {
+  /* Not logged in — show Login link */
+  navDisplay.innerHTML = '<a href="login.html" style="font-weight:bold; color:#111;">Login</a>';
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+    /* ----------------------------------------------------------
+       2. AI CONDITION CHECK
+          Sends image to backend → backend calls Claude/Gemini API
+          API returns ONE word: New / Good / Bad / Worse
+
+          Endpoint: POST http://localhost:3000/check-condition
+          Body:     { image: "base64", mimeType: "image/jpeg" }
+          Response: { condition: "Good" }
+    ---------------------------------------------------------- */
+    async function checkConditionWithAI(base64Image, mimeType) {
+
+      /* Show spinner */
+      document.getElementById("aiLoading").style.display = "flex";
+      /* Hide old result */
+      document.getElementById("conditionResult").style.display = "none";
+      /* Clear condition field */
+      document.getElementById("condition").value = "";
+
+      try {
+        /* Real API call to backend */
+        const response = await fetch("http://localhost:3000/check-condition", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            image: base64Image,
+            mimeType: mimeType || "image/jpeg"
+          })
+        });
+
+        const data = await response.json();
+        /* data.condition = "New" or "Good" or "Bad" or "Worse" */
+        showConditionResult(data.condition);
+
+      } catch (err) {
+        /* DEMO MODE — backend not connected yet
+           Simulates AI response with random condition
+           Remove this once backend is ready */
+        console.log("Demo mode — backend not connected");
+        setTimeout(() => {
+          const demo = ["Good", "Bad", "Worse", "New"];
+          showConditionResult(demo[Math.floor(Math.random() * demo.length)]);
+        }, 2000);
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       3. SHOW CONDITION RESULT
+          - Hides spinner
+          - Shows colored result box
+          - Sets the LOCKED readonly field
+            (only this function ever writes to condition field)
+    ---------------------------------------------------------- */
+    function showConditionResult(condition) {
+
+      /* Hide spinner */
+      document.getElementById("aiLoading").style.display = "none";
+
+      /* Condition to icon + message + color class */
+      const map = {
+        "New":   { icon: "🆕", msg: "AI says: Item is New",               cls: "new"   },
+        "Good":  { icon: "✅", msg: "AI says: Item is in Good condition",  cls: "good"  },
+        "Bad":   { icon: "⚠️", msg: "AI says: Item is in Bad condition",   cls: "bad"   },
+        "Worse": { icon: "❌", msg: "AI says: Item is in Worse condition",  cls: "worse" }
+      };
+
+      const result = map[condition] || map["Good"];
+
+      /* Show colored result box */
+      document.getElementById("conditionIcon").textContent = result.icon;
+      document.getElementById("conditionText").textContent = result.msg;
+      const box = document.getElementById("conditionResult");
+      box.className = "condition-result " + result.cls;
+      box.style.display = "flex";
+
+      /* Set the locked readonly field — ONLY place this value is ever written */
+      /* readonly on the input means user can never change it themselves */
+      document.getElementById("condition").value = condition;
+    }
+
+
+    /* ----------------------------------------------------------
+       4. SUBMIT DONATION
+          Validates all fields then POSTs to backend
+    ---------------------------------------------------------- */
+   async function submitDonation() {
+
+  /* Read field values */
+  const title            = document.getElementById("itemName").value.trim();
+  const description      = document.getElementById("description").value.trim();
+  const phone            = document.getElementById("phone").value.trim();
+  const address          = document.getElementById("address").value.trim();
+  const condition_status = document.getElementById("condition").value.trim();
+
+  /* Validate all fields */
+  if (!title)               { alert("Please enter the item name.");       return; }
+  if (!description)         { alert("Please enter a description.");       return; }
+  if (!phone)               { alert("Please enter your phone number.");   return; }
+  if (!address)             { alert("Please enter your pickup address."); return; }
+  if (!uploadedImageBase64) { alert("Please upload a photo of the item."); return; }
+  if (!condition_status)    { alert("Please upload a photo first so AI can detect the item condition."); return; }
+
+  /* Disable button while submitting */
+  const btn = document.getElementById("submitBtn");
+  btn.disabled    = true;
+  btn.textContent = "Submitting...";
+
+  try {
+    /* POST to backend with token in headers */
+    const res = await fetch("http://localhost:3000/donations", {
+      method: "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "authorization": localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        condition_status,
+        phone,
+        address,
+        image: uploadedImageBase64
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showSuccess();
+    } else {
+      alert(data.message || "Error submitting donation.");
+      btn.disabled    = false;
+      btn.textContent = "Submit Donation";
+    }
+
+  } catch (err) {
+    showSuccess();
+  }
+}
+
+    /* ----------------------------------------------------------
+       5. SHOW SUCCESS SCREEN
+          Hides form, shows thank you message
+    ---------------------------------------------------------- */
+    function showSuccess() {
+      document.getElementById("formSection").style.display = "none";
+      document.getElementById("successMsg").style.display  = "block";
+    }
+
+  </script>
+
+</body>
+</html>
