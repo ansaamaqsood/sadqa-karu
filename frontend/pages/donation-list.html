@@ -704,7 +704,7 @@
     let allDonations = [];
 
     /* Fetch donations from real backend */
-fetch("http://localhost:3000/donations")
+fetch("https://sadqa-karu.vercel.app/donations")
   .then(res => res.json())
   .then(data => {
     allDonations = data;
@@ -827,7 +827,7 @@ async function saveEdit() {
 
   try {
     /* PUT request to backend with token */
-    const res = await fetch(`http://localhost:3000/donations/${editingId}`, {
+    const res = await fetch(`https://sadqa-karu.vercel.app/donations/${editingId}`, {
       method: "PUT",
       headers: {
         "Content-Type":  "application/json",
@@ -1005,7 +1005,7 @@ async function deleteDonation(id) {
   if (!confirm) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/donations/${id}`, {
+    const res = await fetch(`https://sadqa-karu.vercel.app/donations/${id}`, {
       method: "DELETE",
       headers: {
         "authorization": localStorage.getItem("token")

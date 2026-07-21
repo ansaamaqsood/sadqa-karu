@@ -125,7 +125,7 @@ function logout() {
 
 const container = document.getElementById("ngo-list");
 
-fetch("http://localhost:3000/ngos")
+fetch("https://sadqa-karu.vercel.app/ngos")
   .then(res => res.json())
   .then(data => {
     container.innerHTML = "";

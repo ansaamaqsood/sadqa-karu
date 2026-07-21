@@ -778,7 +778,7 @@
  
 <script>
 const token = localStorage.getItem("token");
-const API = "http://localhost:3000";
+const API = "https://sadqa-karu.vercel.app";
  
 // ── NAVIGATION ──
 function showSection(name) {
@@ -1042,15 +1042,15 @@ function openDetailModal(item, type) {
   if (type === "ngo") {
     bodyHTML += `
       <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">${item.description || "—"}</span></div>
-      ${item.ngo_certificate ? `<div class="detail-row"><span class="detail-label">Certificate</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.ngo_certificate}" target="_blank">📋 View Certificate</a></span></div>` : ""}
+      ${item.ngo_certificate ? `<div class="detail-row"><span class="detail-label">Certificate</span><span class="detail-value"><a class="doc-link" href="https://sadqa-karu.vercel.app/uploads/${item.ngo_certificate}" target="_blank">📋 View Certificate</a></span></div>` : ""}
     `;
   } else {
     bodyHTML += `
       <div class="detail-row"><span class="detail-label">CNIC</span><span class="detail-value">${item.cnic || "—"}</span></div>
       <div class="detail-row"><span class="detail-label">Service Type</span><span class="detail-value">${item.service_type || "Doctor"}</span></div>
-      ${item.cnic_front ? `<div class="detail-row"><span class="detail-label">CNIC Front</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.cnic_front}" target="_blank">📄 View</a></span></div>` : ""}
-      ${item.cnic_back ? `<div class="detail-row"><span class="detail-label">CNIC Back</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.cnic_back}" target="_blank">📄 View</a></span></div>` : ""}
-      ${item.verification_doc ? `<div class="detail-row"><span class="detail-label">Verification</span><span class="detail-value"><a class="doc-link" href="http://localhost:3000/uploads/${item.verification_doc}" target="_blank">🏥 View Doc</a></span></div>` : ""}
+      ${item.cnic_front ? `<div class="detail-row"><span class="detail-label">CNIC Front</span><span class="detail-value"><a class="doc-link" href="https://sadqa-karu.vercel.app/uploads/${item.cnic_front}" target="_blank">📄 View</a></span></div>` : ""}
+      ${item.cnic_back ? `<div class="detail-row"><span class="detail-label">CNIC Back</span><span class="detail-value"><a class="doc-link" href="https://sadqa-karu.vercel.app/uploads/${item.cnic_back}" target="_blank">📄 View</a></span></div>` : ""}
+      ${item.verification_doc ? `<div class="detail-row"><span class="detail-label">Verification</span><span class="detail-value"><a class="doc-link" href="https://sadqa-karu.vercel.app/uploads/${item.verification_doc}" target="_blank">🏥 View Doc</a></span></div>` : ""}
     `;
   }
  
@@ -1072,7 +1072,7 @@ function openDonationModal(d) {
     <div class="detail-row"><span class="detail-label">NGO</span><span class="detail-value">${d.ngo_name || d.ngo_id || "—"}</span></div>
     <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-badge ${d.status || 'pending'}">${d.status || "Pending"}</span></span></div>
     <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value">${new Date(d.created_at).toLocaleString()}</span></div>
-    ${d.image_url ? `<div class="detail-row"><span class="detail-label">Image</span><span class="detail-value"><img src="http://localhost:3000/uploads/${d.image_url}" style="max-width:100%;border-radius:10px;margin-top:6px;"></span></div>` : ""}
+    ${d.image_url ? `<div class="detail-row"><span class="detail-label">Image</span><span class="detail-value"><img src="https://sadqa-karu.vercel.app/uploads/${d.image_url}" style="max-width:100%;border-radius:10px;margin-top:6px;"></span></div>` : ""}
     ${d.condition ? `<div class="detail-row"><span class="detail-label">AI Condition</span><span class="detail-value"><span class="status-badge accepted">${d.condition}</span></span></div>` : ""}
   `;
   document.getElementById("modal-footer").innerHTML = `

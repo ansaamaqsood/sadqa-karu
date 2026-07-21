@@ -342,9 +342,9 @@
       try {
         /* Fetch all 3 counts at the same time */
         const [ngoRes, donationRes, volunteerRes] = await Promise.all([
-          fetch("http://localhost:3000/ngos/count"),
-          fetch("http://localhost:3000/donations/count"),
-          fetch("http://localhost:3000/volunteers/count")
+          fetch("https://sadqa-karu.vercel.app/ngos/count"),
+          fetch("https://sadqa-karu.vercel.app/donations/count"),
+          fetch("https://sadqa-karu.vercel.app/volunteers/count")
         ]);
 
         const ngoData       = await ngoRes.json();
@@ -392,7 +392,7 @@
 
       try {
         /* Send login request to backend */
-        const res = await fetch("http://localhost:3000/login", {
+        const res = await fetch("https://sadqa-karu.vercel.app/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password, role })

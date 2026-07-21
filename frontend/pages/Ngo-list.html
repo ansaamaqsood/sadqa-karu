@@ -659,7 +659,7 @@
        1. FETCH approved NGOs from backend
           Falls back to demo data if backend is not running
     ---------------------------------------------------------- */
-    fetch("http://localhost:3000/ngos?status=approved")
+    fetch("https://sadqa-karu.vercel.app/ngos?status=approved")
       .then(res => res.json())
       .then(data => {
         allNGOs = data;

@@ -679,9 +679,9 @@
 
     /* ── LOAD LIVE STATS FROM BACKEND ── */
     Promise.all([
-      fetch("http://localhost:3000/ngos/count").then(r => r.json()).catch(() => ({ count: 8 })),
-      fetch("http://localhost:3000/donations/count").then(r => r.json()).catch(() => ({ count: 50 })),
-      fetch("http://localhost:3000/volunteers/count").then(r => r.json()).catch(() => ({ count: 20 }))
+      fetch("https://sadqa-karu.vercel.app/ngos/count").then(r => r.json()).catch(() => ({ count: 8 })),
+      fetch("https://sadqa-karu.vercel.app/donations/count").then(r => r.json()).catch(() => ({ count: 50 })),
+      fetch("https://sadqa-karu.vercel.app/volunteers/count").then(r => r.json()).catch(() => ({ count: 20 }))
     ]).then(([ngos, donations, volunteers]) => {
       document.getElementById("statNGOs").textContent       = ngos.count       + "+";
       document.getElementById("statDonations").textContent  = donations.count  + "+";

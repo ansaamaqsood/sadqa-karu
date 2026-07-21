@@ -456,7 +456,7 @@ function logout() {
        1. LOAD VOLUNTEERS
           Tries backend first
     ---------------------------------------------------------- */
-   fetch("http://localhost:3000/volunteers")
+   fetch("https://sadqa-karu.vercel.app/volunteers")
   .then(res => res.json())
   .then(data => { allVolunteers = data; renderVolunteers(allVolunteers); })
   .catch(err => {
