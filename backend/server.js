@@ -53,6 +53,10 @@ app.post("/check-condition", async (req, res) => {
   //console.log("Server running on http://localhost:3000");
 //});
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log("Server running on port " + PORT);
+  });
+}
+
+module.exports = app;
